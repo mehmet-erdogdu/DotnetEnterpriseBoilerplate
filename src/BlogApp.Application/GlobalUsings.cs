@@ -1,0 +1,16 @@
+global using BlogApp.Application.Constants;
+global using BlogApp.Application.DTOs;
+global using BlogApp.Application.Services;
+global using BlogApp.Domain.Entities;
+global using BlogApp.Domain.Interfaces;
+global using BlogApp.Infrastructure.Services;
+global using FluentValidation;
+global using MediatR;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.IdentityModel.Tokens;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Security.Claims;
+global using System.Text;

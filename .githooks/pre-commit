@@ -1,0 +1,29 @@
+#!/bin/sh
+set -e
+
+# Format and alphabetically sort MessageService.*.json files and GlobalUsings.cs files before commit
+
+# Collect staged files (both JSON and GlobalUsings.cs)
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '(^src/BlogApp\.Application/Resources/MessageService\..*\.json$|GlobalUsings\.cs$)' || true)
+
+if [ -z "$FILES" ]; then
+  exit 0
+fi
+
+# Ensure Node is available
+if ! command -v node >/dev/null 2>&1; then
+  echo "error: 'node' not found. Please install Node.js to format files." >&2
+  exit 1
+fi
+
+# Run the formatter on the staged files
+node scripts/sort-files.js $FILES
+
+# Re-add any updated files to the commit
+for f in $FILES; do
+  if [ -f "$f" ]; then
+    git add "$f"
+  fi
+done
+
+exit 0
