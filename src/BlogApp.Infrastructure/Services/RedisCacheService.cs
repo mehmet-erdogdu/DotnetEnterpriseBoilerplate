@@ -2,31 +2,83 @@ using StackExchange.Redis;
 
 namespace BlogApp.Infrastructure.Services;
 
-public class RedisCacheService(IDistributedCache cache, ILogger<RedisCacheService> logger, IConfiguration configuration) : ICacheService
+// Interface to wrap IDistributedCache methods for easier testing
+public interface IDistributedCacheWrapper
 {
+    Task<string?> GetStringAsync(string key, CancellationToken token = default);
+    Task SetStringAsync(string key, string value, DistributedCacheEntryOptions options, CancellationToken token = default);
+    Task RemoveAsync(string key, CancellationToken token = default);
+}
+
+// Implementation that wraps the real IDistributedCache
+public class DistributedCacheWrapper : IDistributedCacheWrapper
+{
+    private readonly IDistributedCache _cache;
+
+    public DistributedCacheWrapper(IDistributedCache cache)
+    {
+        _cache = cache;
+    }
+
+    public Task<string?> GetStringAsync(string key, CancellationToken token = default)
+    {
+        return _cache.GetStringAsync(key, token);
+    }
+
+    public Task SetStringAsync(string key, string value, DistributedCacheEntryOptions options, CancellationToken token = default)
+    {
+        return _cache.SetStringAsync(key, value, options, token);
+    }
+
+    public Task RemoveAsync(string key, CancellationToken token = default)
+    {
+        return _cache.RemoveAsync(key, token);
+    }
+}
+
+public class RedisCacheService : ICacheService
+{
+    private readonly IDistributedCacheWrapper _cache;
+    private readonly ILogger<RedisCacheService> _logger;
+    private readonly IConfiguration _configuration;
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = false
     };
 
+    public RedisCacheService(IDistributedCache cache, ILogger<RedisCacheService> logger, IConfiguration configuration)
+    {
+        _cache = new DistributedCacheWrapper(cache);
+        _logger = logger;
+        _configuration = configuration;
+    }
+
+    // Constructor for testing with mocked wrapper
+    internal RedisCacheService(IDistributedCacheWrapper cacheWrapper, ILogger<RedisCacheService> logger, IConfiguration configuration)
+    {
+        _cache = cacheWrapper;
+        _logger = logger;
+        _configuration = configuration;
+    }
+
     public async Task<T?> GetAsync<T>(string key)
     {
         try
         {
-            var cachedValue = await cache.GetStringAsync(key);
+            var cachedValue = await _cache.GetStringAsync(key);
             if (string.IsNullOrEmpty(cachedValue))
             {
-                logger.LogDebug("Cache miss for key: {Key}", key);
+                _logger.LogDebug("Cache miss for key: {Key}", key);
                 return default;
             }
 
-            logger.LogDebug("Cache hit for key: {Key}", key);
+            _logger.LogDebug("Cache hit for key: {Key}", key);
             return JsonSerializer.Deserialize<T>(cachedValue, _jsonOptions);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error getting value from cache for key: {Key}", key);
+            _logger.LogError(ex, "Error getting value from cache for key: {Key}", key);
             return default;
         }
     }
@@ -40,12 +92,12 @@ public class RedisCacheService(IDistributedCache cache, ILogger<RedisCacheServic
 
             if (expiration.HasValue) options.SetAbsoluteExpiration(expiration.Value);
 
-            await cache.SetStringAsync(key, serializedValue, options);
-            logger.LogDebug("Cached value for key: {Key} with expiration: {Expiration}", key, expiration);
+            await _cache.SetStringAsync(key, serializedValue, options, default);
+            _logger.LogDebug("Cached value for key: {Key} with expiration: {Expiration}", key, expiration);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error setting value in cache for key: {Key}", key);
+            _logger.LogError(ex, "Error setting value in cache for key: {Key}", key);
         }
     }
 
@@ -53,12 +105,12 @@ public class RedisCacheService(IDistributedCache cache, ILogger<RedisCacheServic
     {
         try
         {
-            await cache.RemoveAsync(key);
-            logger.LogDebug("Removed cache entry for key: {Key}", key);
+            await _cache.RemoveAsync(key);
+            _logger.LogDebug("Removed cache entry for key: {Key}", key);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error removing cache entry for key: {Key}", key);
+            _logger.LogError(ex, "Error removing cache entry for key: {Key}", key);
         }
     }
 
@@ -66,10 +118,10 @@ public class RedisCacheService(IDistributedCache cache, ILogger<RedisCacheServic
     {
         try
         {
-            logger.LogInformation("Pattern removal requested for pattern: {Pattern}", pattern);
+            _logger.LogInformation("Pattern removal requested for pattern: {Pattern}", pattern);
 
             // Redis server bağlantısını al
-            var multiplexer = await ConnectionMultiplexer.ConnectAsync(configuration["RedisConnection"]!);
+            var multiplexer = await ConnectionMultiplexer.ConnectAsync(_configuration["RedisConnection"]!);
 
             var endpoints = multiplexer.GetEndPoints();
             foreach (var endpoint in endpoints)
@@ -83,15 +135,15 @@ public class RedisCacheService(IDistributedCache cache, ILogger<RedisCacheServic
                 foreach (var key in keys)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    await cache.RemoveAsync(key);
+                    await _cache.RemoveAsync(key);
 #pragma warning restore CS8604 // Possible null reference argument.
-                    logger.LogDebug("Removed cache entry for key: {Key}", key);
+                    _logger.LogDebug("Removed cache entry for key: {Key}", key);
                 }
             }
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error removing cache entries for pattern: {Pattern}", pattern);
+            _logger.LogError(ex, "Error removing cache entries for pattern: {Pattern}", pattern);
         }
     }
 
@@ -99,12 +151,12 @@ public class RedisCacheService(IDistributedCache cache, ILogger<RedisCacheServic
     {
         try
         {
-            var value = await cache.GetStringAsync(key);
+            var value = await _cache.GetStringAsync(key);
             return !string.IsNullOrEmpty(value);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error checking existence for key: {Key}", key);
+            _logger.LogError(ex, "Error checking existence for key: {Key}", key);
             return false;
         }
     }
@@ -122,7 +174,7 @@ public class RedisCacheService(IDistributedCache cache, ILogger<RedisCacheServic
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error incrementing value for key: {Key}", key);
+            _logger.LogError(ex, "Error incrementing value for key: {Key}", key);
             return 0L;
         }
     }
@@ -131,24 +183,24 @@ public class RedisCacheService(IDistributedCache cache, ILogger<RedisCacheServic
     {
         try
         {
-            logger.LogDebug("TTL check requested for key: {Key}", key);
+            _logger.LogDebug("TTL check requested for key: {Key}", key);
 
             // Redis bağlantısını al
-            var multiplexer = await ConnectionMultiplexer.ConnectAsync(configuration["RedisConnection"]!);
+            var multiplexer = await ConnectionMultiplexer.ConnectAsync(_configuration["RedisConnection"]!);
 
             var db = multiplexer.GetDatabase();
             var ttl = await db.KeyTimeToLiveAsync(key);
 
             if (ttl.HasValue)
-                logger.LogDebug("TTL for key {Key} is {TTL}", key, ttl.Value);
+                _logger.LogDebug("TTL for key {Key} is {TTL}", key, ttl.Value);
             else
-                logger.LogDebug("No TTL found for key {Key} (may not exist or has no expiration)", key);
+                _logger.LogDebug("No TTL found for key {Key} (may not exist or has no expiration)", key);
 
             return ttl;
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error getting TTL for key: {Key}", key);
+            _logger.LogError(ex, "Error getting TTL for key: {Key}", key);
             return null;
         }
     }

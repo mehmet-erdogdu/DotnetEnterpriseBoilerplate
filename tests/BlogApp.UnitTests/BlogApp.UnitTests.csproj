@@ -29,12 +29,23 @@
 
     <ItemGroup>
         <Using Include="Xunit"/>
+        <Using Include="Moq"/>
+        <Using Include="FluentAssertions"/>
+        <Using Include="Microsoft.Extensions.Logging"/>
+        <Using Include="Microsoft.EntityFrameworkCore"/>
+        <Using Include="Microsoft.Extensions.Caching.Distributed"/>
+        <Using Include="Microsoft.Extensions.Configuration"/>
+        <Using Include="System.Text.Json"/>
+        <Using Include="System.Security.Claims"/>
+        <Using Include="Microsoft.AspNetCore.Mvc"/>
+        <Using Include="Microsoft.AspNetCore.Http"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\BlogApp.API\BlogApp.API.csproj"/>
         <ProjectReference Include="..\..\src\BlogApp.Domain\BlogApp.Domain.csproj"/>
         <ProjectReference Include="..\..\src\BlogApp.Application\BlogApp.Application.csproj"/>
+        <ProjectReference Include="..\..\src\BlogApp.Infrastructure\BlogApp.Infrastructure.csproj"/>
         <ProjectReference Include="..\..\src\BlogApp.Worker\BlogApp.Worker.csproj"/>
     </ItemGroup>
 
