@@ -1,6 +1,3 @@
-using BlogApp.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
-
 namespace BlogApp.UnitTests.Infrastructure.Repositories;
 
 public class FileRepositoryTests : BaseTestClass

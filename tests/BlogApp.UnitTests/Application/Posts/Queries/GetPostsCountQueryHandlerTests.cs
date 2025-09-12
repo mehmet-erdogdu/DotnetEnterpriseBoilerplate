@@ -1,15 +1,10 @@
-using BlogApp.Application.Posts.Queries;
-using BlogApp.Domain.Interfaces;
-using Microsoft.Extensions.Logging;
-using Moq;
-
 namespace BlogApp.UnitTests.Application.Posts.Queries;
 
 public class GetPostsCountQueryHandlerTests
 {
     private readonly GetPostsCountQueryHandler _handler;
-    private readonly Mock<IPostRepository> _mockPostRepository;
     private readonly Mock<ILogger<GetPostsCountQueryHandler>> _mockLogger;
+    private readonly Mock<IPostRepository> _mockPostRepository;
 
     public GetPostsCountQueryHandlerTests()
     {
