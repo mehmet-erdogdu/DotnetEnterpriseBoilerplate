@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectorConfiguration>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>json,cobertura,lcov,teamcity,opencover</Format>
+          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
+          <ExcludeByFile>**/Migrations/**,**/Program.cs,**/GlobalUsings.cs,**/*.g.cs</ExcludeByFile>
+          <Include>[BlogApp.Domain]*,[BlogApp.Application]*,[BlogApp.Infrastructure]*</Include>
+          <Exclude>[BlogApp.UnitTests]*,[BlogApp.API]*,[BlogApp.Worker]*</Exclude>
+          <SkipAutoProps>true</SkipAutoProps>
+          <DeterministicReport>true</DeterministicReport>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectorConfiguration>
+</RunSettings>
