@@ -4,7 +4,7 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
-          <Format>cobertura</Format>
+          <Format>cobertura,opencover</Format>
           <ExcludeByFile>**/DTOs/*.cs,**/Entities/*.cs,**/Migrations/*.cs,**/GlobalUsings.cs,**/Program.cs,**/Constants/*.cs,**/Properties/*.cs,**/bin/**/*,**/obj/**/*</ExcludeByFile>
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverage</ExcludeByAttribute>
           <IncludeTestAssembly>false</IncludeTestAssembly>

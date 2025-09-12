@@ -10,11 +10,6 @@ jobs:
     name: Build and analyze
     runs-on: windows-latest
     steps:
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: 'zulu' # Alternative distribution options are available.
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -47,7 +42,7 @@ jobs:
         run: dotnet build --no-restore
       - name: Run .NET tests with coverage
         run: |
-          dotnet test --no-build --collect:"XPlat Code Coverage" --results-directory ./TestResults -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          dotnet test --collect:"XPlat Code Coverage" --settings tests/BlogApp.UnitTests/coverlet.runsettings --results-directory ./TestResults
         continue-on-error: true
       - name: SonarQube Analysis
         env:
@@ -72,8 +67,8 @@ jobs:
             .\.sonar\scanner\dotnet-sonarscanner begin /k:"mehmet-erdogdu_ai-blogApp" /o:"mehmet-erdogdu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           }
           
-          # Build the project
-          dotnet build --no-restore
+          # Build the project (already built during test phase)
+          dotnet build --no-restore --verbosity quiet
           
           # End SonarScanner
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
