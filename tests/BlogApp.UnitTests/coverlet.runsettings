@@ -11,6 +11,10 @@
           <Exclude>[BlogApp.UnitTests]*,[BlogApp.API]*,[BlogApp.Worker]*</Exclude>
           <SkipAutoProps>true</SkipAutoProps>
           <DeterministicReport>true</DeterministicReport>
+          <!-- Coverage threshold settings -->
+          <Threshold>60</Threshold>
+          <ThresholdType>Line</ThresholdType>
+          <ThresholdStat>Total</ThresholdStat>
         </Configuration>
       </DataCollector>
     </DataCollectors>
