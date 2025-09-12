@@ -214,9 +214,6 @@ static void ConfigureScalar(WebApplicationBuilder builder)
 {
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddOpenApi();
-
-    // Only configure Scalar in development environment
-    if (!builder.Environment.IsDevelopment()) return;
 }
 
 static void ConfigureDatabase(WebApplicationBuilder builder)
