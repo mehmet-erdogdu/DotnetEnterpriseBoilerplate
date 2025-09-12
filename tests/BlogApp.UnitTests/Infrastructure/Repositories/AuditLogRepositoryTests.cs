@@ -1,6 +1,3 @@
-using BlogApp.Domain.Entities;
-using BlogApp.Infrastructure.Repositories;
-
 namespace BlogApp.UnitTests.Infrastructure.Repositories;
 
 public class AuditLogRepositoryTests : BaseTestClass
@@ -68,7 +65,7 @@ public class AuditLogRepositoryTests : BaseTestClass
         // Arrange
         var context = CreateDbContext();
         var repository = new AuditLogRepository(context);
-        
+
         // Act
         var result = await repository.GetLogsForEntity("NonExistentTable", Guid.NewGuid());
 
@@ -84,7 +81,7 @@ public class AuditLogRepositoryTests : BaseTestClass
         var context = CreateDbContext();
         var userId = "test-user-id";
         var otherUserId = "other-user-id";
-        
+
         var auditLogs = new List<AuditLog>
         {
             new()
@@ -137,7 +134,7 @@ public class AuditLogRepositoryTests : BaseTestClass
         // Arrange
         var context = CreateDbContext();
         var repository = new AuditLogRepository(context);
-        
+
         // Act
         var result = await repository.GetLogsByUser("non-existent-user");
 
@@ -155,7 +152,7 @@ public class AuditLogRepositoryTests : BaseTestClass
         var endDate = DateTime.UtcNow.AddHours(1);
         var beforeStartDate = startDate.AddHours(-1);
         var afterEndDate = endDate.AddHours(1);
-        
+
         var auditLogs = new List<AuditLog>
         {
             new()
@@ -218,7 +215,7 @@ public class AuditLogRepositoryTests : BaseTestClass
         var context = CreateDbContext();
         var startDate = DateTime.UtcNow.AddDays(1);
         var endDate = DateTime.UtcNow.AddDays(2);
-        
+
         var auditLogs = new List<AuditLog>
         {
             new()
@@ -359,10 +356,7 @@ public class AuditLogRepositoryTests : BaseTestClass
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            _repository = null;
-        }
+        if (disposing) _repository = null;
         base.Dispose(disposing);
     }
 }
