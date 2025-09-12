@@ -1,11 +1,9 @@
-using BlogApp.Infrastructure.Repositories;
-
 namespace BlogApp.UnitTests.Infrastructure.Repositories;
 
 public class GenericRepositoryTests : BaseTestClass
 {
-    private new ApplicationDbContext _context = null!;
-    private GenericRepository<Todo> _repository = null!;
+    private new readonly ApplicationDbContext _context = null!;
+    private readonly GenericRepository<Todo> _repository = null!;
 
     public GenericRepositoryTests()
     {
@@ -15,10 +13,7 @@ public class GenericRepositoryTests : BaseTestClass
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            _context.Dispose();
-        }
+        if (disposing) _context.Dispose();
         base.Dispose(disposing);
     }
 
@@ -78,16 +73,16 @@ public class GenericRepositoryTests : BaseTestClass
         var user1Todos = new List<Todo>();
         var user2Todos = new List<Todo>();
 
-        for (int i = 0; i < 3; i++)
+        for (var i = 0; i < 3; i++)
         {
-            var todo = TestHelper.TestData.CreateTestTodo(userId: "user1", id: Guid.NewGuid());
+            var todo = TestHelper.TestData.CreateTestTodo("user1", Guid.NewGuid());
             user1Todos.Add(todo);
             await _context.Todos.AddAsync(todo);
         }
 
-        for (int i = 0; i < 2; i++)
+        for (var i = 0; i < 2; i++)
         {
-            var todo = TestHelper.TestData.CreateTestTodo(userId: "user2", id: Guid.NewGuid());
+            var todo = TestHelper.TestData.CreateTestTodo("user2", Guid.NewGuid());
             user2Todos.Add(todo);
             await _context.Todos.AddAsync(todo);
         }
@@ -232,7 +227,7 @@ public class GenericRepositoryTests : BaseTestClass
         // Get tracked entities
         var trackedTodo1 = await _context.Todos.FindAsync(todo1.Id);
         var trackedTodo2 = await _context.Todos.FindAsync(todo2.Id);
-        
+
         trackedTodo1.Should().NotBeNull();
         trackedTodo2.Should().NotBeNull();
 
@@ -246,7 +241,7 @@ public class GenericRepositoryTests : BaseTestClass
         // We can verify this by checking that SaveChangesAsync would process deletions
         var result = await _context.SaveChangesAsync();
         result.Should().BeGreaterThan(0);
-        
+
         // Verify the entities were actually removed
         var remainingTodo = await _context.Todos.FindAsync(todo3.Id);
         remainingTodo.Should().NotBeNull(); // This one should still exist

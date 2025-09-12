@@ -1,4 +1,5 @@
 using BlogApp.Application.Common.Behaviors;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine("Starting App " + DateTime.Now);
@@ -23,7 +24,7 @@ try
     ConfigureForwardedHeaders(builder);
     ConfigureRateLimiting(builder);
     ConfigureLocalization(builder);
-    ConfigureSwagger(builder);
+    ConfigureScalar(builder);
     ConfigureDatabase(builder);
     ConfigureIdentity(builder);
     ConfigureAuthentication(builder);
@@ -209,51 +210,13 @@ static void ConfigureLocalization(WebApplicationBuilder builder)
     builder.Services.AddScoped<IMessageService, MessageService>();
 }
 
-static void ConfigureSwagger(WebApplicationBuilder builder)
+static void ConfigureScalar(WebApplicationBuilder builder)
 {
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
     builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddOpenApi();
 
+    // Only configure Scalar in development environment
     if (!builder.Environment.IsDevelopment()) return;
-
-    builder.Services.AddSwaggerGen(option =>
-    {
-        option.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Title = "Blog API",
-            Version = "v1",
-            Description = "A simple blog API with JWT authentication"
-        });
-
-        if (File.Exists(xmlPath)) option.IncludeXmlComments(xmlPath);
-
-        option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        {
-            Description =
-                "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer"
-        });
-
-        option.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                },
-                Array.Empty<string>()
-            }
-        });
-    });
 }
 
 static void ConfigureDatabase(WebApplicationBuilder builder)
@@ -392,10 +355,10 @@ static void ConfigurePipeline(WebApplication app, WebApplicationBuilder builder)
     // Development pipeline
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        // Redirect root to Swagger in development
-        app.MapGet("/", () => Results.Redirect("/swagger"));
+        app.MapOpenApi();
+        app.MapScalarApiReference(options => { options.WithTitle("Blog API"); });
+        // Redirect root to Scalar in development
+        app.MapGet("/", () => Results.Redirect("/scalar"));
     }
 
     if (!app.Environment.IsDevelopment())

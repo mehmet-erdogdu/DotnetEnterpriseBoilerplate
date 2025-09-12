@@ -1,6 +1,3 @@
-using BlogApp.Application.DTOs;
-using Xunit;
-
 namespace BlogApp.UnitTests.Application.DTOs;
 
 public class DashboardStatisticsDtoTests
@@ -76,7 +73,7 @@ public class LoginResponseDtoTests
         // Assert
         Assert.Equal(string.Empty, loginResponse.AccessToken);
         Assert.Equal(string.Empty, loginResponse.RefreshToken);
-        Assert.Equal(default(DateTime), loginResponse.ExpiresAt);
+        Assert.Equal(default, loginResponse.ExpiresAt);
         Assert.Equal("Bearer", loginResponse.TokenType);
     }
 }

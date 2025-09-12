@@ -8,7 +8,7 @@ public class UpdatePostCommandHandlerTests : BaseApplicationTest
     public UpdatePostCommandHandlerTests()
     {
         _mockSpecificLogger = new Mock<ILogger<UpdatePostCommandHandler>>();
-        
+
         _handler = new UpdatePostCommandHandler(
             _mockUnitOfWork.Object,
             _mockCacheInvalidationService.Object,

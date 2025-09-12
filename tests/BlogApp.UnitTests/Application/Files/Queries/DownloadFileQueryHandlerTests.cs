@@ -3,8 +3,8 @@ namespace BlogApp.UnitTests.Application.Files.Queries;
 public class DownloadFileQueryHandlerTests : BaseApplicationTest
 {
     private readonly DownloadFileQueryHandler _handler;
-    private readonly Mock<IFileService> _mockFileService;
     private readonly Mock<IFileRepository> _mockFileRepository;
+    private readonly Mock<IFileService> _mockFileService;
     private readonly Mock<IMessageService> _mockMessageServiceLocal;
 
     public DownloadFileQueryHandlerTests()

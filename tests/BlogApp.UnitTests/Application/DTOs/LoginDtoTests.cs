@@ -1,6 +1,3 @@
-using BlogApp.Application.DTOs;
-using Xunit;
-
 namespace BlogApp.UnitTests.Application.DTOs;
 
 public class LoginDtoTests

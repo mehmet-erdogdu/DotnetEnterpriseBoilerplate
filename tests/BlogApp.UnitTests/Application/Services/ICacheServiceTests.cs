@@ -1,7 +1,3 @@
-using BlogApp.Application.Services;
-using Moq;
-using Xunit;
-
 namespace BlogApp.UnitTests.Application.Services;
 
 public class ICacheServiceTests
@@ -14,7 +10,7 @@ public class ICacheServiceTests
         var testKey = "test-key";
         var testValue = "test-value";
         var testExpiration = TimeSpan.FromMinutes(5);
-        
+
         // Act & Assert
         // Verify that the interface has the expected methods by setting up mock expectations
         mockService.Setup(x => x.GetAsync<string>(testKey))
@@ -31,7 +27,7 @@ public class ICacheServiceTests
             .ReturnsAsync(1L);
         mockService.Setup(x => x.GetTimeToLiveAsync(testKey))
             .ReturnsAsync(testExpiration);
-            
+
         // This test ensures the interface contract is as expected
         // If the interface changes, this test will help identify the change
     }

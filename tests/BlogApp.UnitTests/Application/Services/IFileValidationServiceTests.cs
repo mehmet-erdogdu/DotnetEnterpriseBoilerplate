@@ -1,7 +1,4 @@
-using BlogApp.Application.Services;
-using BlogApp.Application.DTOs;
-using Moq;
-using Xunit;
+using ValidationResult = BlogApp.Application.DTOs.ValidationResult;
 
 namespace BlogApp.UnitTests.Application.Services;
 
@@ -14,8 +11,8 @@ public class IFileValidationServiceTests
         var mockService = new Mock<IFileValidationService>();
         var testUserId = "test-user-id";
         var testStream = new MemoryStream();
-        var validationResult = new BlogApp.Application.DTOs.ValidationResult { IsValid = true, Errors = new List<string>() };
-        
+        var validationResult = new ValidationResult { IsValid = true, Errors = new List<string>() };
+
         var presignedRequest = new PresignedUploadRequestDto
         {
             FileName = "test.txt",
@@ -23,7 +20,7 @@ public class IFileValidationServiceTests
             FileSize = 1024,
             Description = "Test file"
         };
-        
+
         var completeDto = new CompleteUploadDto
         {
             FileId = Guid.NewGuid(),
@@ -31,7 +28,7 @@ public class IFileValidationServiceTests
             OriginalFileName = "test-original.txt",
             ContentType = "text/plain"
         };
-        
+
         // Act & Assert
         // Verify that the interface has the expected methods by setting up mock expectations
         mockService.Setup(x => x.ValidatePresignedUploadRequestAsync(presignedRequest, testUserId))
@@ -52,7 +49,7 @@ public class IFileValidationServiceTests
             .Returns(false);
         mockService.Setup(x => x.SanitizeFileName("test.txt"))
             .Returns("test.txt");
-            
+
         // This test ensures the interface contract is as expected
         // If the interface changes, this test will help identify the change
     }

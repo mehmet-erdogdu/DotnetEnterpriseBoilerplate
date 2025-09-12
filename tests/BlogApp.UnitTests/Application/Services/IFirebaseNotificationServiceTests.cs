@@ -1,8 +1,3 @@
-using BlogApp.Application.Services;
-using BlogApp.Application.DTOs;
-using Moq;
-using Xunit;
-
 namespace BlogApp.UnitTests.Application.Services;
 
 public class IFirebaseNotificationServiceTests
@@ -15,7 +10,7 @@ public class IFirebaseNotificationServiceTests
         var testTopic = "test-topic";
         var testToken = "test-token";
         var testUserId = "test-user-id";
-        
+
         var notificationDto = new FirebaseNotificationDto
         {
             Title = "Test Notification",
@@ -27,7 +22,7 @@ public class IFirebaseNotificationServiceTests
             Priority = true,
             TimeToLive = 3600
         };
-        
+
         var requestDto = new FirebaseNotificationRequestDto
         {
             TokenIds = new List<string> { testToken },
@@ -35,7 +30,7 @@ public class IFirebaseNotificationServiceTests
             Topic = testTopic,
             Data = new Dictionary<string, string> { { "key", "value" } }
         };
-        
+
         var responseDto = new FirebaseNotificationResponseDto
         {
             Success = true,
@@ -44,7 +39,7 @@ public class IFirebaseNotificationServiceTests
             FailureCount = 0,
             FailedTokens = new List<string>()
         };
-        
+
         var deviceTokenDto = new DeviceTokenDto
         {
             UserId = testUserId,
@@ -53,7 +48,7 @@ public class IFirebaseNotificationServiceTests
             CreatedAt = DateTime.UtcNow,
             LastUsedAt = DateTime.UtcNow
         };
-        
+
         // Act & Assert
         // Verify that the interface has the expected methods by setting up mock expectations
         mockService.Setup(x => x.SendNotificationAsync(requestDto))
@@ -72,7 +67,7 @@ public class IFirebaseNotificationServiceTests
             .ReturnsAsync(new List<string> { testToken });
         mockService.Setup(x => x.IsTokenValidAsync(testToken))
             .ReturnsAsync(true);
-            
+
         // This test ensures the interface contract is as expected
         // If the interface changes, this test will help identify the change
     }

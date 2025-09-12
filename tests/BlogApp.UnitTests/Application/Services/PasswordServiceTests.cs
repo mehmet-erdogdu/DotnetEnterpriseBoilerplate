@@ -2,8 +2,8 @@ namespace BlogApp.UnitTests.Application.Services;
 
 public class PasswordServiceTests : BaseApplicationTest
 {
-    private readonly PasswordService _passwordService;
     private readonly Mock<IPasswordHistoryRepository> _mockPasswordHistoryRepository;
+    private readonly PasswordService _passwordService;
 
     public PasswordServiceTests()
     {
@@ -33,8 +33,8 @@ public class PasswordServiceTests : BaseApplicationTest
         await _passwordService.TrackPasswordChangeAsync(userId, passwordHash);
 
         // Assert
-        _mockPasswordHistoryRepository.Verify(x => x.AddAsync(It.Is<PasswordHistory>(ph => 
-            ph.UserId == userId && 
+        _mockPasswordHistoryRepository.Verify(x => x.AddAsync(It.Is<PasswordHistory>(ph =>
+            ph.UserId == userId &&
             ph.PasswordHash == passwordHash)), Times.Once);
         _mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once);
     }

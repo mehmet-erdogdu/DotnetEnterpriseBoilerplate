@@ -1,6 +1,3 @@
-using BlogApp.Application.DTOs;
-using Xunit;
-
 namespace BlogApp.UnitTests.Application.DTOs;
 
 public class UserDtoTests
@@ -54,7 +51,7 @@ public class UserDtoTests
         Assert.Equal(string.Empty, userDto.FirstName);
         Assert.Equal(string.Empty, userDto.LastName);
         Assert.False(userDto.EmailConfirmed);
-        Assert.Equal(default(DateTime), userDto.CreatedAt);
+        Assert.Equal(default, userDto.CreatedAt);
         Assert.Null(userDto.UpdatedAt);
         Assert.NotNull(userDto.Roles);
         Assert.Empty(userDto.Roles);

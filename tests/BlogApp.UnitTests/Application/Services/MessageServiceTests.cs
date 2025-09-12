@@ -2,8 +2,8 @@ namespace BlogApp.UnitTests.Application.Services;
 
 public class MessageServiceTests : BaseServiceTest
 {
-    private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
     private readonly MessageService _messageService;
+    private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
 
     public MessageServiceTests()
     {
@@ -59,10 +59,10 @@ public class MessageServiceTests : BaseServiceTest
         // Arrange
         var key = "EmailRequired";
         var expectedMessage = "Email is required";
-        
+
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers["Accept-Language"] = "en-US";
-        
+
         _mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
 
         // Act
@@ -78,10 +78,10 @@ public class MessageServiceTests : BaseServiceTest
         // Arrange
         var key = "EmailRequired";
         var expectedMessage = "E-posta zorunludur"; // Turkish translation
-        
+
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers["Accept-Language"] = "tr-TR";
-        
+
         _mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
 
         // Act
@@ -97,10 +97,10 @@ public class MessageServiceTests : BaseServiceTest
         // Arrange
         var key = "EmailRequired";
         var expectedMessage = "Email is required";
-        
+
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers["Accept-Language"] = "fr-FR"; // Unsupported language
-        
+
         _mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
 
         // Act
@@ -116,10 +116,10 @@ public class MessageServiceTests : BaseServiceTest
         // Arrange
         var key = "EmailRequired";
         var expectedMessage = "Email is required";
-        
+
         var httpContext = new DefaultHttpContext();
         // No Accept-Language header
-        
+
         _mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
 
         // Act

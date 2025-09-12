@@ -1,10 +1,8 @@
-using BlogApp.Infrastructure.Data;
-
 namespace BlogApp.UnitTests.Infrastructure.Data;
 
 public class ApplicationDbContextTests : BaseTestClass
 {
-    private new ApplicationDbContext _context = null!;
+    private new readonly ApplicationDbContext _context = null!;
 
     public ApplicationDbContextTests()
     {
@@ -13,10 +11,7 @@ public class ApplicationDbContextTests : BaseTestClass
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            _context.Dispose();
-        }
+        if (disposing) _context.Dispose();
         base.Dispose(disposing);
     }
 
@@ -55,7 +50,7 @@ public class ApplicationDbContextTests : BaseTestClass
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
 
-        var post = TestHelper.TestData.CreateTestPost(authorId: user.Id);
+        var post = TestHelper.TestData.CreateTestPost(user.Id);
 
         // Act
         await _context.Posts.AddAsync(post);
@@ -97,7 +92,7 @@ public class ApplicationDbContextTests : BaseTestClass
         var user = TestHelper.TestData.CreateTestUser();
         await _context.Users.AddAsync(user);
 
-        var todo = TestHelper.TestData.CreateTestTodo(userId: user.Id);
+        var todo = TestHelper.TestData.CreateTestTodo(user.Id);
         await _context.Todos.AddAsync(todo);
 
         await _context.SaveChangesAsync();
@@ -121,7 +116,7 @@ public class ApplicationDbContextTests : BaseTestClass
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
 
-        var todo = TestHelper.TestData.CreateTestTodo(userId: user.Id);
+        var todo = TestHelper.TestData.CreateTestTodo(user.Id);
         await _context.Todos.AddAsync(todo);
         await _context.SaveChangesAsync();
 

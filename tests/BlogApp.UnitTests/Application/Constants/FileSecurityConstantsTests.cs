@@ -1,6 +1,5 @@
-using BlogApp.Application.Constants;
 using System.Collections.Immutable;
-using Xunit;
+using System.Text.RegularExpressions;
 
 namespace BlogApp.UnitTests.Application.Constants;
 
@@ -42,7 +41,7 @@ public class FileSecurityConstantsTests
     {
         // Assert
         Assert.Equal(TimeSpan.FromMilliseconds(100), FileSecurityConstants.RegexTimeout);
-        Assert.Equal(System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Compiled, 
+        Assert.Equal(RegexOptions.IgnoreCase | RegexOptions.Compiled,
             FileSecurityConstants.DefaultRegexOptions);
     }
 
@@ -60,7 +59,7 @@ public class FileSecurityConstantsTests
         Assert.Contains(".txt", FileSecurityConstants.AllowedExtensions);
         Assert.Contains(".zip", FileSecurityConstants.AllowedExtensions);
         Assert.Contains(".mp4", FileSecurityConstants.AllowedExtensions);
-        
+
         // Ensure it's immutable
         Assert.IsAssignableFrom<ImmutableHashSet<string>>(FileSecurityConstants.AllowedExtensions);
     }
@@ -75,7 +74,7 @@ public class FileSecurityConstantsTests
         Assert.Contains("text/plain", FileSecurityConstants.AllowedMimeTypes);
         Assert.Contains("application/zip", FileSecurityConstants.AllowedMimeTypes);
         Assert.Contains("video/mp4", FileSecurityConstants.AllowedMimeTypes);
-        
+
         // Ensure it's immutable
         Assert.IsAssignableFrom<ImmutableHashSet<string>>(FileSecurityConstants.AllowedMimeTypes);
     }
@@ -89,7 +88,7 @@ public class FileSecurityConstantsTests
         Assert.Contains(".cmd", FileSecurityConstants.DangerousExtensions);
         Assert.Contains(".js", FileSecurityConstants.DangerousExtensions);
         Assert.Contains(".jar", FileSecurityConstants.DangerousExtensions);
-        
+
         // Ensure it's immutable
         Assert.IsAssignableFrom<ImmutableHashSet<string>>(FileSecurityConstants.DangerousExtensions);
     }
@@ -102,7 +101,7 @@ public class FileSecurityConstantsTests
         Assert.Contains("application/x-msdownload", FileSecurityConstants.DangerousMimeTypes);
         Assert.Contains("text/javascript", FileSecurityConstants.DangerousMimeTypes);
         Assert.Contains("application/javascript", FileSecurityConstants.DangerousMimeTypes);
-        
+
         // Ensure it's immutable
         Assert.IsAssignableFrom<ImmutableHashSet<string>>(FileSecurityConstants.DangerousMimeTypes);
     }
@@ -121,7 +120,7 @@ public class FileSecurityConstantsTests
         Assert.Contains('\\', FileSecurityConstants.DangerousFileNameChars);
         Assert.Contains('/', FileSecurityConstants.DangerousFileNameChars);
         Assert.Contains('\0', FileSecurityConstants.DangerousFileNameChars);
-        
+
         // Ensure it's immutable
         Assert.IsAssignableFrom<ImmutableArray<char>>(FileSecurityConstants.DangerousFileNameChars);
     }
@@ -136,7 +135,7 @@ public class FileSecurityConstantsTests
         Assert.Contains("windows", FileSecurityConstants.DangerousPathComponents);
         Assert.Contains("system32", FileSecurityConstants.DangerousPathComponents);
         Assert.Contains("program files", FileSecurityConstants.DangerousPathComponents);
-        
+
         // Ensure it's immutable
         Assert.IsAssignableFrom<ImmutableHashSet<string>>(FileSecurityConstants.DangerousPathComponents);
     }
@@ -150,12 +149,12 @@ public class FileSecurityConstantsTests
         Assert.True(FileSecurityConstants.FileSignatures.ContainsKey(".pdf"));
         Assert.True(FileSecurityConstants.FileSignatures.ContainsKey(".zip"));
         Assert.True(FileSecurityConstants.FileSignatures.ContainsKey(".mp4"));
-        
+
         // Check specific signatures
         Assert.Equal(new byte[] { 0xFF, 0xD8, 0xFF }, FileSecurityConstants.FileSignatures[".jpg"]);
         Assert.Equal(new byte[] { 0x89, 0x50, 0x4E, 0x47 }, FileSecurityConstants.FileSignatures[".png"]);
         Assert.Equal(new byte[] { 0x25, 0x50, 0x44, 0x46 }, FileSecurityConstants.FileSignatures[".pdf"]);
-        
+
         // Ensure it's immutable
         Assert.IsAssignableFrom<ImmutableDictionary<string, byte[]>>(FileSecurityConstants.FileSignatures);
     }

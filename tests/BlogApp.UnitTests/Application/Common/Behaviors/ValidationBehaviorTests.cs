@@ -1,7 +1,5 @@
 using BlogApp.Application.Common.Behaviors;
-using FluentValidation;
-using FluentValidation.Results;
-using MediatR;
+using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace BlogApp.UnitTests.Application.Common.Behaviors;
 
@@ -28,7 +26,7 @@ public class ValidationBehaviorTests : BaseApplicationTest
         var response = new TestResponse { Message = "Success" };
         var nextCalled = false;
 
-        RequestHandlerDelegate<TestResponse> next = (cancellationToken) =>
+        RequestHandlerDelegate<TestResponse> next = cancellationToken =>
         {
             nextCalled = true;
             return Task.FromResult(response);
@@ -48,13 +46,13 @@ public class ValidationBehaviorTests : BaseApplicationTest
         // Arrange
         var request = new TestRequest { Name = "Test" };
         var response = new TestResponse { Message = "Success" };
-        var validationResult = new FluentValidation.Results.ValidationResult();
+        var validationResult = new ValidationResult();
 
         _mockValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<TestRequest>>(), CancellationToken.None))
             .ReturnsAsync(validationResult);
 
         var nextCalled = false;
-        RequestHandlerDelegate<TestResponse> next = (cancellationToken) =>
+        RequestHandlerDelegate<TestResponse> next = cancellationToken =>
         {
             nextCalled = true;
             return Task.FromResult(response);
@@ -75,18 +73,18 @@ public class ValidationBehaviorTests : BaseApplicationTest
         // Arrange
         var request = new TestRequest { Name = "" };
         var validationFailure = new ValidationFailure("Name", "Name is required");
-        var validationResult = new FluentValidation.Results.ValidationResult(new List<ValidationFailure> { validationFailure });
+        var validationResult = new ValidationResult(new List<ValidationFailure> { validationFailure });
 
         _mockValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<TestRequest>>(), CancellationToken.None))
             .ReturnsAsync(validationResult);
 
-        RequestHandlerDelegate<TestResponse> next = (cancellationToken) => Task.FromResult(new TestResponse());
+        RequestHandlerDelegate<TestResponse> next = cancellationToken => Task.FromResult(new TestResponse());
 
         // Act
         Func<Task> act = () => _validationBehavior.Handle(request, next, CancellationToken.None);
 
         // Assert
-        await act.Should().ThrowAsync<FluentValidation.ValidationException>()
+        await act.Should().ThrowAsync<ValidationException>()
             .Where(ex => ex.Errors.Count() == 1 && ex.Errors.First().PropertyName == "Name");
         _mockValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<TestRequest>>(), CancellationToken.None), Times.Once);
     }
@@ -97,29 +95,29 @@ public class ValidationBehaviorTests : BaseApplicationTest
         // Arrange
         var request = new TestRequest { Name = "" };
         var mockValidator2 = new Mock<IValidator<TestRequest>>();
-        
+
         var validators = new List<IValidator<TestRequest>> { _mockValidator.Object, mockValidator2.Object };
         var behavior = new ValidationBehavior<TestRequest, TestResponse>(validators);
-        
-        var validationResult1 = new FluentValidation.Results.ValidationResult();
+
+        var validationResult1 = new ValidationResult();
         var validationFailure = new ValidationFailure("Name", "Name is required");
-        var validationResult2 = new FluentValidation.Results.ValidationResult(new List<ValidationFailure> { validationFailure });
+        var validationResult2 = new ValidationResult(new List<ValidationFailure> { validationFailure });
 
         _mockValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<TestRequest>>(), CancellationToken.None))
             .ReturnsAsync(validationResult1);
-            
+
         mockValidator2.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<TestRequest>>(), CancellationToken.None))
             .ReturnsAsync(validationResult2);
 
-        RequestHandlerDelegate<TestResponse> next = (cancellationToken) => Task.FromResult(new TestResponse());
+        RequestHandlerDelegate<TestResponse> next = cancellationToken => Task.FromResult(new TestResponse());
 
         // Act
         Func<Task> act = () => behavior.Handle(request, next, CancellationToken.None);
 
         // Assert
-        await act.Should().ThrowAsync<FluentValidation.ValidationException>()
+        await act.Should().ThrowAsync<ValidationException>()
             .Where(ex => ex.Errors.Count() == 1 && ex.Errors.First().PropertyName == "Name");
-            
+
         _mockValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<TestRequest>>(), CancellationToken.None), Times.Once);
         mockValidator2.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<TestRequest>>(), CancellationToken.None), Times.Once);
     }

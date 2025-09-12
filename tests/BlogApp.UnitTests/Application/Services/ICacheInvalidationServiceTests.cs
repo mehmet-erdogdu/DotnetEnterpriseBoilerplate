@@ -1,7 +1,3 @@
-using BlogApp.Application.Services;
-using Moq;
-using Xunit;
-
 namespace BlogApp.UnitTests.Application.Services;
 
 public class ICacheInvalidationServiceTests
@@ -11,7 +7,7 @@ public class ICacheInvalidationServiceTests
     {
         // Arrange
         var mockService = new Mock<ICacheInvalidationService>();
-        
+
         // Act & Assert
         // Verify that the interface has the expected methods by setting up mock expectations
         mockService.Setup(x => x.InvalidatePostCacheAsync(It.IsAny<Guid?>()))
@@ -22,7 +18,7 @@ public class ICacheInvalidationServiceTests
             .Returns(Task.CompletedTask);
         mockService.Setup(x => x.InvalidateAllCacheAsync())
             .Returns(Task.CompletedTask);
-            
+
         // This test ensures the interface contract is as expected
         // If the interface changes, this test will help identify the change
     }

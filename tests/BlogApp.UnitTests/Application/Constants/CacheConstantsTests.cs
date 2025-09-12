@@ -1,6 +1,3 @@
-using BlogApp.Application.Constants;
-using Xunit;
-
 namespace BlogApp.UnitTests.Application.Constants;
 
 public class CacheConstantsTests

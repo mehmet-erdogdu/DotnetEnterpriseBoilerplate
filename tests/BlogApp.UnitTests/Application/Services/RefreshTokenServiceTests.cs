@@ -2,9 +2,9 @@ namespace BlogApp.UnitTests.Application.Services;
 
 public class RefreshTokenServiceTests : BaseApplicationTest
 {
-    private readonly RefreshTokenService _refreshTokenService;
-    private readonly Mock<IRefreshTokenRepository> _mockRefreshTokenRepository;
     private readonly Mock<IConfiguration> _mockConfiguration;
+    private readonly Mock<IRefreshTokenRepository> _mockRefreshTokenRepository;
+    private readonly RefreshTokenService _refreshTokenService;
 
     public RefreshTokenServiceTests()
     {
@@ -31,10 +31,10 @@ public class RefreshTokenServiceTests : BaseApplicationTest
         result.Should().NotBeNullOrEmpty();
         result.Length.Should().BeGreaterThan(64); // Base64 encoded 64 bytes should be longer than 64 characters
 
-        _mockRefreshTokenRepository.Verify(x => x.AddAsync(It.Is<RefreshToken>(rt => 
-            rt.UserId == userId && 
-            rt.Token == result && 
-            rt.ExpiresAt <= DateTime.UtcNow.AddDays(7).AddSeconds(1) && 
+        _mockRefreshTokenRepository.Verify(x => x.AddAsync(It.Is<RefreshToken>(rt =>
+            rt.UserId == userId &&
+            rt.Token == result &&
+            rt.ExpiresAt <= DateTime.UtcNow.AddDays(7).AddSeconds(1) &&
             rt.ExpiresAt >= DateTime.UtcNow.AddDays(7).AddSeconds(-1))), Times.Once);
         _mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once);
     }

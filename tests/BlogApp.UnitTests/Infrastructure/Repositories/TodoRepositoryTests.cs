@@ -1,11 +1,9 @@
-using BlogApp.Infrastructure.Repositories;
-
 namespace BlogApp.UnitTests.Infrastructure.Repositories;
 
 public class TodoRepositoryTests : BaseTestClass
 {
-    private new ApplicationDbContext _context = null!;
-    private TodoRepository _todoRepository = null!;
+    private new readonly ApplicationDbContext _context = null!;
+    private readonly TodoRepository _todoRepository = null!;
 
     public TodoRepositoryTests()
     {
@@ -15,10 +13,7 @@ public class TodoRepositoryTests : BaseTestClass
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            _context.Dispose();
-        }
+        if (disposing) _context.Dispose();
         base.Dispose(disposing);
     }
 
@@ -29,9 +24,9 @@ public class TodoRepositoryTests : BaseTestClass
         var user = TestHelper.TestData.CreateTestUser();
         await _context.Users.AddAsync(user);
 
-        var todo1 = TestHelper.TestData.CreateTestTodo(userId: user.Id);
-        var todo2 = TestHelper.TestData.CreateTestTodo(userId: user.Id, id: Guid.NewGuid());
-        var todo3 = TestHelper.TestData.CreateTestTodo(userId: "other-user-id", id: Guid.NewGuid());
+        var todo1 = TestHelper.TestData.CreateTestTodo(user.Id);
+        var todo2 = TestHelper.TestData.CreateTestTodo(user.Id, Guid.NewGuid());
+        var todo3 = TestHelper.TestData.CreateTestTodo("other-user-id", Guid.NewGuid());
 
         await _context.Todos.AddRangeAsync(todo1, todo2, todo3);
         await _context.SaveChangesAsync();
@@ -67,7 +62,7 @@ public class TodoRepositoryTests : BaseTestClass
         var user = TestHelper.TestData.CreateTestUser();
         await _context.Users.AddAsync(user);
 
-        var todo = TestHelper.TestData.CreateTestTodo(userId: user.Id);
+        var todo = TestHelper.TestData.CreateTestTodo(user.Id);
         await _context.Todos.AddAsync(todo);
         await _context.SaveChangesAsync();
 
@@ -98,13 +93,13 @@ public class TodoRepositoryTests : BaseTestClass
     public async Task GetAllWithUsersAsync_ReturnsAllTodosWithUsers()
     {
         // Arrange
-        var user1 = TestHelper.TestData.CreateTestUser(id: "user1");
-        var user2 = TestHelper.TestData.CreateTestUser(id: "user2", email: "user2@example.com");
+        var user1 = TestHelper.TestData.CreateTestUser("user1");
+        var user2 = TestHelper.TestData.CreateTestUser("user2", "user2@example.com");
         await _context.Users.AddRangeAsync(user1, user2);
 
-        var todo1 = TestHelper.TestData.CreateTestTodo(userId: user1.Id);
-        var todo2 = TestHelper.TestData.CreateTestTodo(userId: user2.Id, id: Guid.NewGuid());
-        var todo3 = TestHelper.TestData.CreateTestTodo(userId: user1.Id, id: Guid.NewGuid());
+        var todo1 = TestHelper.TestData.CreateTestTodo(user1.Id);
+        var todo2 = TestHelper.TestData.CreateTestTodo(user2.Id, Guid.NewGuid());
+        var todo3 = TestHelper.TestData.CreateTestTodo(user1.Id, Guid.NewGuid());
 
         await _context.Todos.AddRangeAsync(todo1, todo2, todo3);
         await _context.SaveChangesAsync();
@@ -126,9 +121,9 @@ public class TodoRepositoryTests : BaseTestClass
         var user = TestHelper.TestData.CreateTestUser();
         await _context.Users.AddAsync(user);
 
-        var todo1 = TestHelper.TestData.CreateTestTodo(userId: user.Id);
-        var todo2 = TestHelper.TestData.CreateTestTodo(userId: user.Id, id: Guid.NewGuid());
-        var todo3 = TestHelper.TestData.CreateTestTodo(userId: "other-user-id", id: Guid.NewGuid());
+        var todo1 = TestHelper.TestData.CreateTestTodo(user.Id);
+        var todo2 = TestHelper.TestData.CreateTestTodo(user.Id, Guid.NewGuid());
+        var todo3 = TestHelper.TestData.CreateTestTodo("other-user-id", Guid.NewGuid());
 
         await _context.Todos.AddRangeAsync(todo1, todo2, todo3);
         await _context.SaveChangesAsync();

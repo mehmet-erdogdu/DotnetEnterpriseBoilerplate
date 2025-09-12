@@ -39,13 +39,15 @@ public class DistributedCacheWrapper : IDistributedCacheWrapper
 public class RedisCacheService : ICacheService
 {
     private readonly IDistributedCacheWrapper _cache;
-    private readonly ILogger<RedisCacheService> _logger;
     private readonly IConfiguration _configuration;
+
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = false
     };
+
+    private readonly ILogger<RedisCacheService> _logger;
 
     public RedisCacheService(IDistributedCache cache, ILogger<RedisCacheService> logger, IConfiguration configuration)
     {
@@ -92,7 +94,7 @@ public class RedisCacheService : ICacheService
 
             if (expiration.HasValue) options.SetAbsoluteExpiration(expiration.Value);
 
-            await _cache.SetStringAsync(key, serializedValue, options, default);
+            await _cache.SetStringAsync(key, serializedValue, options);
             _logger.LogDebug("Cached value for key: {Key} with expiration: {Expiration}", key, expiration);
         }
         catch (Exception ex)

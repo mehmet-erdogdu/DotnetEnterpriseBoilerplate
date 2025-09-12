@@ -1,11 +1,9 @@
-using BlogApp.Infrastructure.Repositories;
-
 namespace BlogApp.UnitTests.Infrastructure.Repositories;
 
 public class UnitOfWorkTests : BaseTestClass
 {
-    private new ApplicationDbContext _context = null!;
-    private UnitOfWork _unitOfWork = null!;
+    private new readonly ApplicationDbContext _context = null!;
+    private readonly UnitOfWork _unitOfWork = null!;
 
     public UnitOfWorkTests()
     {
@@ -20,6 +18,7 @@ public class UnitOfWorkTests : BaseTestClass
             _unitOfWork.Dispose();
             _context.Dispose();
         }
+
         base.Dispose(disposing);
     }
 

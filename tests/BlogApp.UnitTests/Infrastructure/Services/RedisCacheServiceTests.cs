@@ -1,33 +1,28 @@
-using BlogApp.Infrastructure.Services;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Moq;
-using System.Text.Json;
+using System.Reflection;
 
 namespace BlogApp.UnitTests.Infrastructure.Services;
 
 public class RedisCacheServiceTests
 {
-    private RedisCacheService _cacheService = null!;
-    private Mock<IDistributedCacheWrapper> _mockCache = null!;
-    private Mock<ILogger<RedisCacheService>> _mockLogger = null!;
-    private Mock<IConfiguration> _mockConfiguration = null!;
+    private readonly RedisCacheService _cacheService = null!;
+    private readonly Mock<IDistributedCacheWrapper> _mockCache = null!;
+    private readonly Mock<IConfiguration> _mockConfiguration = null!;
+    private readonly Mock<ILogger<RedisCacheService>> _mockLogger = null!;
 
     public RedisCacheServiceTests()
     {
         _mockConfiguration = new Mock<IConfiguration>();
         _mockConfiguration.Setup(c => c["RedisConnection"]).Returns("localhost:6379");
-        
+
         _mockLogger = new Mock<ILogger<RedisCacheService>>();
         _mockLogger.Setup(x => x.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
-        
+
         _mockCache = new Mock<IDistributedCacheWrapper>();
-        
+
         // Use the internal constructor for testing
         _cacheService = (RedisCacheService)Activator.CreateInstance(
             typeof(RedisCacheService),
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
+            BindingFlags.NonPublic | BindingFlags.Instance,
             null,
             new object[] { _mockCache.Object, _mockLogger.Object, _mockConfiguration.Object },
             null)!;
@@ -129,10 +124,10 @@ public class RedisCacheServiceTests
 
         // Assert
         _mockCache.Verify(x => x.SetStringAsync(
-                key,
-                serializedValue,
-                It.Is<DistributedCacheEntryOptions>(o => o.AbsoluteExpirationRelativeToNow == expiration),
-                It.IsAny<CancellationToken>()), Times.Once);
+            key,
+            serializedValue,
+            It.Is<DistributedCacheEntryOptions>(o => o.AbsoluteExpirationRelativeToNow == expiration),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -277,7 +272,7 @@ public class RedisCacheServiceTests
 
         // Mock the GetAsync call for the initial value (null)
         _mockCache.Setup(x => x.GetStringAsync(key, It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult<string?>((string?)null));
+            .Returns(Task.FromResult((string?)null));
 
         var options = new DistributedCacheEntryOptions();
         var expectedValueSerialized2 = JsonSerializer.Serialize(expectedValue);
@@ -304,7 +299,7 @@ public class RedisCacheServiceTests
             .ThrowsAsync(exception);
 
         // Act
-        var result = await _cacheService.IncrementAsync(key, 1);
+        var result = await _cacheService.IncrementAsync(key);
 
         // Assert
         result.Should().Be(1L);

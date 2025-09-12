@@ -48,10 +48,7 @@ public class GetAllTodosQueryHandlerTests : BaseApplicationTest
         };
 
         var todos = new List<Todo>();
-        for (int i = 0; i < 5; i++)
-        {
-            todos.Add(TestHelper.TestData.CreateTestTodo(id: Guid.NewGuid()));
-        }
+        for (var i = 0; i < 5; i++) todos.Add(TestHelper.TestData.CreateTestTodo(id: Guid.NewGuid()));
 
         var mockTodoRepository = new Mock<ITodoRepository>();
         _mockUnitOfWork.Setup(x => x.Todos).Returns(mockTodoRepository.Object);
@@ -81,10 +78,7 @@ public class GetAllTodosQueryHandlerTests : BaseApplicationTest
         };
 
         var todos = new List<Todo>();
-        for (int i = 0; i < 15; i++)
-        {
-            todos.Add(TestHelper.TestData.CreateTestTodo(id: Guid.NewGuid()));
-        }
+        for (var i = 0; i < 15; i++) todos.Add(TestHelper.TestData.CreateTestTodo(id: Guid.NewGuid()));
 
         var mockTodoRepository = new Mock<ITodoRepository>();
         _mockUnitOfWork.Setup(x => x.Todos).Returns(mockTodoRepository.Object);

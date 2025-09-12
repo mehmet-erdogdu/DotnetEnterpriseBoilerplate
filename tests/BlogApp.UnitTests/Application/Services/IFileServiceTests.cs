@@ -1,7 +1,3 @@
-using BlogApp.Application.Services;
-using Moq;
-using Xunit;
-
 namespace BlogApp.UnitTests.Application.Services;
 
 public class IFileServiceTests
@@ -26,7 +22,7 @@ public class IFileServiceTests
             UploadedById = testUserId,
             CreatedAt = DateTime.UtcNow
         };
-        
+
         var presignedRequest = new PresignedUploadRequestDto
         {
             FileName = "test.txt",
@@ -34,7 +30,7 @@ public class IFileServiceTests
             FileSize = 1024,
             Description = "Test file"
         };
-        
+
         var presignedResponse = new PresignedUploadResponseDto
         {
             FileId = testFileId,
@@ -43,7 +39,7 @@ public class IFileServiceTests
             ExpiresAt = DateTime.UtcNow.AddMinutes(15),
             FormFields = new Dictionary<string, string>()
         };
-        
+
         var completeDto = new CompleteUploadDto
         {
             FileId = testFileId,
@@ -51,7 +47,7 @@ public class IFileServiceTests
             OriginalFileName = "test-original.txt",
             ContentType = "text/plain"
         };
-        
+
         var uploadResponse = new FileUploadResponseDto
         {
             Id = testFileId,
@@ -63,7 +59,7 @@ public class IFileServiceTests
             Description = "Test file",
             CreatedAt = DateTime.UtcNow
         };
-        
+
         // Act & Assert
         // Verify that the interface has the expected methods by setting up mock expectations
         mockService.Setup(x => x.GetFileAsync(testFileId))
@@ -80,7 +76,7 @@ public class IFileServiceTests
             .ReturnsAsync(presignedResponse);
         mockService.Setup(x => x.CompleteUploadAsync(completeDto, testUserId))
             .ReturnsAsync(uploadResponse);
-            
+
         // This test ensures the interface contract is as expected
         // If the interface changes, this test will help identify the change
     }
