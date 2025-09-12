@@ -1,81 +1,79 @@
-name: SonarQube Analysis
-
+name: SonarQube
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
-  sonarqube:
-    name: SonarQube Analysis
+  build:
+    name: Build and analyze
     runs-on: windows-latest
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          fetch-depth: 0
-
+          java-version: 17
+          distribution: 'zulu' # Alternative distribution options are available.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-
-      - name: Cache NuGet packages
+      - name: Cache SonarQube Cloud packages
         uses: actions/cache@v4
         with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
+          path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-
-      - name: Install SonarQube Scanner
-        run: dotnet tool install --global dotnet-sonarscanner
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Run tests with coverage
+      - name: Cache SonarQube Cloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v4
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Install SonarQube Cloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
         run: |
-          dotnet test \
-            --collect:"XPlat Code Coverage" \
-            --settings tests/BlogApp.UnitTests/coverlet.runsettings \
-            --results-directory ./TestResults \
-            --verbosity normal
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Restore .NET dependencies
+        run: dotnet restore
+      - name: Build .NET project
+        run: dotnet build --no-restore
+      - name: Run .NET tests with coverage
+        run: |
+          dotnet test --no-build --collect:"XPlat Code Coverage" --results-directory ./TestResults -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         continue-on-error: true
       - name: SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
         run: |
-          # Find coverage file
-          $coverageFile = Get-ChildItem -Path ./TestResults -Recurse -Filter "coverage.opencover.xml" | Select-Object -First 1
-          
-          # Begin SonarQube analysis
-          if ($coverageFile) {
-            Write-Host "Coverage file found: $($coverageFile.FullName)"
-            dotnet sonarscanner begin \
-              /k:"mehmet-erdogdu_ai-blogApp" \
-              /o:"mehmet-erdogdu" \
-              /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-              /d:sonar.cs.opencover.reportsPaths="$($coverageFile.FullName)"
+          # Find the .NET coverage file
+          $dotnetCoverageFile = Get-ChildItem -Path ./TestResults -Recurse -Name "coverage.opencover.xml" | Select-Object -First 1
+          $dotnetCoveragePath = ""
+          if ($dotnetCoverageFile) {
+            $dotnetCoveragePath = "./TestResults/$dotnetCoverageFile"
+            Write-Host "Dotnet coverage file found: $dotnetCoveragePath"
           } else {
-            Write-Host "No coverage file found, running without coverage"
-            dotnet sonarscanner begin \
-              /k:"mehmet-erdogdu_ai-blogApp" \
-              /o:"mehmet-erdogdu" \
-              /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            Write-Host "No dotnet coverage file found"
           }
           
-          # Build project
-          dotnet build --no-restore --verbosity quiet
+          # Begin SonarScanner with coverage data
+          if ($dotnetCoveragePath) {
+            .\.sonar\scanner\dotnet-sonarscanner begin /k:"mehmet-erdogdu_ai-blogApp" /o:"mehmet-erdogdu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="$dotnetCoveragePath"
+          } else {
+            Write-Host "No coverage files found"
+            .\.sonar\scanner\dotnet-sonarscanner begin /k:"mehmet-erdogdu_ai-blogApp" /o:"mehmet-erdogdu" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          }
           
-          # End SonarQube analysis
-          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          # Build the project
+          dotnet build --no-restore
+          
+          # End SonarScanner
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
