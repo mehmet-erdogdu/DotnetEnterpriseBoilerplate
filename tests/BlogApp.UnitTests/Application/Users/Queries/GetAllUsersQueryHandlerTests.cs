@@ -34,10 +34,12 @@ public class GetAllUsersQueryHandlerTests : BaseApplicationTest
                 EmailConfirmed = false,
                 CreatedAt = DateTime.UtcNow
             }
-        }.AsQueryable();
+        };
 
+        // Use TestAsyncEnumerable to support async operations
+        var mockUsers = new TestAsyncEnumerable<ApplicationUser>(users);
         _mockUserManager.Setup(x => x.Users)
-            .Returns(users);
+            .Returns(mockUsers);
 
         _mockUserManager.Setup(x => x.GetRolesAsync(It.IsAny<ApplicationUser>()))
             .ReturnsAsync(new List<string> { "User" });
@@ -81,8 +83,8 @@ public class GetAllUsersQueryHandlerTests : BaseApplicationTest
             }
         };
 
-        // Setup mocks with async support
-        var mockUsers = users.AsQueryable();
+        // Setup mocks with async support using TestAsyncEnumerable
+        var mockUsers = new TestAsyncEnumerable<ApplicationUser>(users);
         _mockUserManager.Setup(x => x.Users).Returns(mockUsers);
 
         _mockUserManager.Setup(x => x.GetRolesAsync(It.IsAny<ApplicationUser>()))
@@ -146,8 +148,8 @@ public class GetAllUsersQueryHandlerTests : BaseApplicationTest
             }
         };
 
-        // Setup mocks with async support
-        var mockUsers = users.AsQueryable();
+        // Setup mocks with async support using TestAsyncEnumerable
+        var mockUsers = new TestAsyncEnumerable<ApplicationUser>(users);
         _mockUserManager.Setup(x => x.Users).Returns(mockUsers);
 
         _mockUserManager.Setup(x => x.GetRolesAsync(It.IsAny<ApplicationUser>()))
