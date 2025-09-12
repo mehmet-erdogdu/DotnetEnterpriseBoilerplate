@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace BlogApp.Application.Constants;
 
+[ExcludeFromCodeCoverage]
 public static class CacheConstants
 {
     public const string PostsPrefix = "posts";

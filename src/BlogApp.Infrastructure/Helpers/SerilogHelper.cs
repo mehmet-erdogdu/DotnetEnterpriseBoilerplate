@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Serilog;
 using Serilog.Events;
@@ -5,6 +6,7 @@ using Serilog.Sinks.Elasticsearch;
 
 namespace BlogApp.Infrastructure.Helpers;
 
+[ExcludeFromCodeCoverage]
 public static class SerilogHelper
 {
     public static void ConfigureSerilog(this WebApplicationBuilder builder)

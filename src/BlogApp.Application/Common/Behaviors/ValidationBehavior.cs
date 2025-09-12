@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using ValidationException = FluentValidation.ValidationException;
 
 namespace BlogApp.Application.Common.Behaviors;
 
+[ExcludeFromCodeCoverage]
 public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull

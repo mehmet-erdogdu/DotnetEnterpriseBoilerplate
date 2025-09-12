@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace BlogApp.Worker.Services;
 
+[ExcludeFromCodeCoverage]
 public class RabbitMqDemoConsumerService(IRabbitMqConnectionProvider connectionProvider, ILogger<RabbitMqDemoConsumerService> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

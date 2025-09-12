@@ -10,6 +10,8 @@ help:
 	@echo "Development:"
 	@echo "  build        - Build the solution"
 	@echo "  test         - Run all tests"
+	@echo "  test-coverage- Run tests with code coverage"
+	@echo "  coverage-report - Generate coverage report"
 	@echo "  run          - Run the API project"
 	@echo "  clean        - Clean build artifacts"
 	@echo ""
@@ -36,6 +38,17 @@ build:
 test:
 	@echo "Running tests..."
 	dotnet test --verbosity normal
+
+test-coverage:
+	@echo "Running tests with code coverage..."
+	dotnet test \
+		--configuration Release \
+		--collect:"XPlat Code Coverage" \
+		--settings tests/BlogApp.UnitTests/coverlet.runsettings
+
+coverage-report:
+	@echo "Generating coverage report..."
+	@scripts/generate-coverage-report.sh
 
 run:
 	@echo "Running API project..."
@@ -104,6 +117,13 @@ windows-build:
 windows-test:
 	@echo "Running tests (Windows)..."
 	dotnet test --verbosity normal
+
+windows-test-coverage:
+	@echo "Running tests with code coverage (Windows)..."
+	dotnet test \
+		--configuration Release \
+		--collect:"XPlat Code Coverage" \
+		--settings tests/BlogApp.UnitTests/coverlet.runsettings
 
 windows-run:
 	@echo "Running API project (Windows)..."

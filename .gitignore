@@ -184,6 +184,13 @@ jspm_packages/
 # React TernJS port file
 .tern-port
 
+# Code Coverage
 /TestResults/
+/CoverageReports/
 /coverage-report/
 /tests/BlogApp.UnitTests/TestResults
+*.cobertura.xml
+*.coverage
+*.coveragexml
+coverage.json
+coverage.lcov

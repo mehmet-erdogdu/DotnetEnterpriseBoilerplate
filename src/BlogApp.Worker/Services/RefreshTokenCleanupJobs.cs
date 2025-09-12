@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace BlogApp.Worker.Services;
 
+[ExcludeFromCodeCoverage]
 public class RefreshTokenCleanupJobs(
     IRefreshTokenService refreshTokenService,
     ILogger<RefreshTokenCleanupJobs> logger)

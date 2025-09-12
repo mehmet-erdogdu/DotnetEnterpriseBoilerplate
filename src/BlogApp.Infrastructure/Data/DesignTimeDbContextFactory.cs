@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using BlogApp.Infrastructure.Helpers;
 
 namespace BlogApp.Infrastructure.Data;
 
+[ExcludeFromCodeCoverage]
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
     public ApplicationDbContext CreateDbContext(string[] args)

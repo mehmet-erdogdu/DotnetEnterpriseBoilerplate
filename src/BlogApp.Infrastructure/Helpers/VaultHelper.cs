@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using VaultSharp;
 using VaultSharp.V1.AuthMethods.Token;
 
 namespace BlogApp.Infrastructure.Helpers;
 
+[ExcludeFromCodeCoverage]
 public static class VaultHelper
 {
     private const string WarningLevel = "Warning";
