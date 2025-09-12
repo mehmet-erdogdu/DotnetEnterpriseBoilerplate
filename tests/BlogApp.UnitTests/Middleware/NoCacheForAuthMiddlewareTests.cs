@@ -1,3 +1,10 @@
+using Microsoft.Extensions.Primitives;
+using Moq;
+using BlogApp.Application.Services;
+using BlogApp.API.Middleware;
+using Microsoft.AspNetCore.Http;
+using FluentAssertions;
+
 namespace BlogApp.UnitTests.Middleware;
 
 public class NoCacheForAuthMiddlewareTests : BaseTestClass
@@ -25,13 +32,13 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         // Assert
         _mockNext.Verify(next => next(_httpContext), Times.Once);
 
-        _httpContext.Response.Headers.Should().ContainKey("Cache-Control");
-        _httpContext.Response.Headers.Should().ContainKey("Pragma");
-        _httpContext.Response.Headers.Should().ContainKey("Expires");
+        _httpContext.Response.Headers.CacheControl.Should().NotBeNull();
+        _httpContext.Response.Headers.Pragma.Should().NotBeNull();
+        _httpContext.Response.Headers.Expires.Should().NotBeNull();
 
-        _httpContext.Response.Headers["Cache-Control"].ToString().Should().Be("no-store");
-        _httpContext.Response.Headers["Pragma"].ToString().Should().Be("no-cache");
-        _httpContext.Response.Headers["Expires"].ToString().Should().Be("0");
+        _httpContext.Response.Headers.CacheControl.ToString().Should().Be("no-store");
+        _httpContext.Response.Headers.Pragma.ToString().Should().Be("no-cache");
+        _httpContext.Response.Headers.Expires.ToString().Should().Be("0");
     }
 
     [Theory]
@@ -53,13 +60,13 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         // Assert
         _mockNext.Verify(next => next(_httpContext), Times.Once);
 
-        _httpContext.Response.Headers.Should().ContainKey("Cache-Control");
-        _httpContext.Response.Headers.Should().ContainKey("Pragma");
-        _httpContext.Response.Headers.Should().ContainKey("Expires");
+        _httpContext.Response.Headers.CacheControl.Should().NotBeNull();
+        _httpContext.Response.Headers.Pragma.Should().NotBeNull();
+        _httpContext.Response.Headers.Expires.Should().NotBeNull();
 
-        _httpContext.Response.Headers["Cache-Control"].ToString().Should().Be("no-store");
-        _httpContext.Response.Headers["Pragma"].ToString().Should().Be("no-cache");
-        _httpContext.Response.Headers["Expires"].ToString().Should().Be("0");
+        _httpContext.Response.Headers.CacheControl.ToString().Should().Be("no-store");
+        _httpContext.Response.Headers.Pragma.ToString().Should().Be("no-cache");
+        _httpContext.Response.Headers.Expires.ToString().Should().Be("0");
     }
 
     [Fact]
@@ -74,9 +81,9 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         // Assert
         _mockNext.Verify(next => next(_httpContext), Times.Once);
 
-        _httpContext.Response.Headers.Should().NotContainKey("Cache-Control");
-        _httpContext.Response.Headers.Should().NotContainKey("Pragma");
-        _httpContext.Response.Headers.Should().NotContainKey("Expires");
+        StringValues.IsNullOrEmpty(_httpContext.Response.Headers.CacheControl).Should().BeTrue();
+        StringValues.IsNullOrEmpty(_httpContext.Response.Headers.Pragma).Should().BeTrue();
+        StringValues.IsNullOrEmpty(_httpContext.Response.Headers.Expires).Should().BeTrue();
     }
 
     [Theory]
@@ -98,9 +105,9 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         // Assert
         _mockNext.Verify(next => next(_httpContext), Times.Once);
 
-        _httpContext.Response.Headers.Should().NotContainKey("Cache-Control");
-        _httpContext.Response.Headers.Should().NotContainKey("Pragma");
-        _httpContext.Response.Headers.Should().NotContainKey("Expires");
+        StringValues.IsNullOrEmpty(_httpContext.Response.Headers.CacheControl).Should().BeTrue();
+        StringValues.IsNullOrEmpty(_httpContext.Response.Headers.Pragma).Should().BeTrue();
+        StringValues.IsNullOrEmpty(_httpContext.Response.Headers.Expires).Should().BeTrue();
     }
 
     [Fact]
@@ -115,13 +122,13 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         // Assert
         _mockNext.Verify(next => next(_httpContext), Times.Once);
 
-        _httpContext.Response.Headers.Should().ContainKey("Cache-Control");
-        _httpContext.Response.Headers.Should().ContainKey("Pragma");
-        _httpContext.Response.Headers.Should().ContainKey("Expires");
+        _httpContext.Response.Headers.CacheControl.Should().NotBeNull();
+        _httpContext.Response.Headers.Pragma.Should().NotBeNull();
+        _httpContext.Response.Headers.Expires.Should().NotBeNull();
 
-        _httpContext.Response.Headers["Cache-Control"].ToString().Should().Be("no-store");
-        _httpContext.Response.Headers["Pragma"].ToString().Should().Be("no-cache");
-        _httpContext.Response.Headers["Expires"].ToString().Should().Be("0");
+        _httpContext.Response.Headers.CacheControl.ToString().Should().Be("no-store");
+        _httpContext.Response.Headers.Pragma.ToString().Should().Be("no-cache");
+        _httpContext.Response.Headers.Expires.ToString().Should().Be("0");
     }
 
     [Fact]
@@ -136,13 +143,13 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         // Assert
         _mockNext.Verify(next => next(_httpContext), Times.Once);
 
-        _httpContext.Response.Headers.Should().ContainKey("Cache-Control");
-        _httpContext.Response.Headers.Should().ContainKey("Pragma");
-        _httpContext.Response.Headers.Should().ContainKey("Expires");
+        _httpContext.Response.Headers.CacheControl.Should().NotBeNull();
+        _httpContext.Response.Headers.Pragma.Should().NotBeNull();
+        _httpContext.Response.Headers.Expires.Should().NotBeNull();
 
-        _httpContext.Response.Headers["Cache-Control"].ToString().Should().Be("no-store");
-        _httpContext.Response.Headers["Pragma"].ToString().Should().Be("no-cache");
-        _httpContext.Response.Headers["Expires"].ToString().Should().Be("0");
+        _httpContext.Response.Headers.CacheControl.ToString().Should().Be("no-store");
+        _httpContext.Response.Headers.Pragma.ToString().Should().Be("no-cache");
+        _httpContext.Response.Headers.Expires.ToString().Should().Be("0");
     }
 
     [Fact]
@@ -157,9 +164,9 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         // Assert
         _mockNext.Verify(next => next(_httpContext), Times.Once);
 
-        _httpContext.Response.Headers.Should().NotContainKey("Cache-Control");
-        _httpContext.Response.Headers.Should().NotContainKey("Pragma");
-        _httpContext.Response.Headers.Should().NotContainKey("Expires");
+        StringValues.IsNullOrEmpty(_httpContext.Response.Headers.CacheControl).Should().BeTrue();
+        StringValues.IsNullOrEmpty(_httpContext.Response.Headers.Pragma).Should().BeTrue();
+        StringValues.IsNullOrEmpty(_httpContext.Response.Headers.Expires).Should().BeTrue();
     }
 
     [Fact]
@@ -170,7 +177,7 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         var headersSetBeforeNext = false;
 
         _mockNext.Setup(next => next(_httpContext))
-            .Callback(() => { headersSetBeforeNext = _httpContext.Response.Headers.ContainsKey("Cache-Control"); });
+            .Callback(() => { headersSetBeforeNext = !StringValues.IsNullOrEmpty(_httpContext.Response.Headers.CacheControl); });
 
         // Act
         await _middleware.InvokeAsync(_httpContext);
@@ -185,9 +192,9 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
     {
         // Arrange
         _httpContext.Request.Path = "/api/auth/login";
-        _httpContext.Response.Headers["Cache-Control"] = "max-age=3600";
-        _httpContext.Response.Headers["Pragma"] = "cache";
-        _httpContext.Response.Headers["Expires"] = "Wed, 21 Oct 2025 07:28:00 GMT";
+        _httpContext.Response.Headers.CacheControl = "max-age=3600";
+        _httpContext.Response.Headers.Pragma = "cache";
+        _httpContext.Response.Headers.Expires = "Wed, 21 Oct 2025 07:28:00 GMT";
 
         // Act
         await _middleware.InvokeAsync(_httpContext);
@@ -195,9 +202,9 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         // Assert
         _mockNext.Verify(next => next(_httpContext), Times.Once);
 
-        _httpContext.Response.Headers["Cache-Control"].ToString().Should().Be("no-store");
-        _httpContext.Response.Headers["Pragma"].ToString().Should().Be("no-cache");
-        _httpContext.Response.Headers["Expires"].ToString().Should().Be("0");
+        _httpContext.Response.Headers.CacheControl.ToString().Should().Be("no-store");
+        _httpContext.Response.Headers.Pragma.ToString().Should().Be("no-cache");
+        _httpContext.Response.Headers.Expires.ToString().Should().Be("0");
     }
 
     [Fact]
@@ -213,8 +220,8 @@ public class NoCacheForAuthMiddlewareTests : BaseTestClass
         _mockNext.Verify(next => next(_httpContext), Times.Once);
 
         // Verify that OnStarting callback is registered by checking if headers are still set
-        _httpContext.Response.Headers.Should().ContainKey("Cache-Control");
-        _httpContext.Response.Headers.Should().ContainKey("Pragma");
-        _httpContext.Response.Headers.Should().ContainKey("Expires");
+        _httpContext.Response.Headers.CacheControl.Should().NotBeNull();
+        _httpContext.Response.Headers.Pragma.Should().NotBeNull();
+        _httpContext.Response.Headers.Expires.Should().NotBeNull();
     }
 }
