@@ -49,4 +49,58 @@
         <ProjectReference Include="..\..\src\BlogApp.Worker\BlogApp.Worker.csproj"/>
     </ItemGroup>
 
+    <!-- Code Coverage Exclusions -->
+    <ItemGroup>
+        <!-- Exclude test files from coverage -->
+        <None Remove="**/*Tests.cs" />
+        <None Remove="**/*Test.cs" />
+        <None Remove="**/TestHelper.cs" />
+        <None Remove="**/BaseTestClass.cs" />
+        
+        <!-- Exclude DTOs from coverage -->
+        <None Remove="**/DTOs/**/*.cs" />
+        <None Remove="**/Dto/**/*.cs" />
+        
+        <!-- Exclude Entities from coverage -->
+        <None Remove="**/Entities/**/*.cs" />
+        <None Remove="**/Entity/**/*.cs" />
+        
+        <!-- Exclude Migrations from coverage -->
+        <None Remove="**/Migrations/**/*.cs" />
+        <None Remove="**/Migration/**/*.cs" />
+        
+        <!-- Exclude Configuration files -->
+        <None Remove="**/GlobalUsings.cs" />
+        <None Remove="**/Program.cs" />
+        <None Remove="**/Startup.cs" />
+        <None Remove="**/Constants/**/*.cs" />
+        <None Remove="**/Properties/**/*.cs" />
+        
+        <!-- Exclude Generated files -->
+        <None Remove="**/DesignTimeDbContextFactory.cs" />
+        <None Remove="**/ApplicationDbContextModelSnapshot.cs" />
+        <None Remove="**/bin/**/*" />
+        <None Remove="**/obj/**/*" />
+        
+        <!-- Exclude Infrastructure helpers -->
+        <None Remove="**/Helpers/**/*.cs" />
+        <None Remove="**/Interceptors/**/*.cs" />
+        <None Remove="**/Extensions/**/*.cs" />
+        
+        <!-- Exclude Worker services -->
+        <None Remove="**/Worker/**/*.cs" />
+        <None Remove="**/Services/**/*.cs" />
+        
+        <!-- Exclude Interfaces -->
+        <None Remove="**/Interfaces/**/*.cs" />
+        <None Remove="**/I*.cs" />
+        
+        <!-- Exclude Build artifacts -->
+        <None Remove="**/TestResults/**/*" />
+        <None Remove="**/*.coverage" />
+        <None Remove="**/*.coveragexml" />
+        <None Remove="**/*.trx" />
+        <None Remove="**/*.log" />
+    </ItemGroup>
+
 </Project>
