@@ -1,9 +1,4 @@
 using Microsoft.Extensions.Primitives;
-using Moq;
-using BlogApp.Application.Services;
-using BlogApp.API.Middleware;
-using Microsoft.AspNetCore.Http;
-using FluentAssertions;
 
 namespace BlogApp.UnitTests.Middleware;
 
