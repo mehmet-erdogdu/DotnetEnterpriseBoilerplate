@@ -61,7 +61,7 @@ public class MessageServiceTests : BaseServiceTest
         var expectedMessage = "Email is required";
 
         var httpContext = new DefaultHttpContext();
-        httpContext.Request.Headers["Accept-Language"] = "en-US";
+        httpContext.Request.Headers.AcceptLanguage = "en-US";
 
         _mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
 
@@ -80,7 +80,7 @@ public class MessageServiceTests : BaseServiceTest
         var expectedMessage = "E-posta zorunludur"; // Turkish translation
 
         var httpContext = new DefaultHttpContext();
-        httpContext.Request.Headers["Accept-Language"] = "tr-TR";
+        httpContext.Request.Headers.AcceptLanguage = "tr-TR";
 
         _mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
 
@@ -99,7 +99,7 @@ public class MessageServiceTests : BaseServiceTest
         var expectedMessage = "Email is required";
 
         var httpContext = new DefaultHttpContext();
-        httpContext.Request.Headers["Accept-Language"] = "fr-FR"; // Unsupported language
+        httpContext.Request.Headers.AcceptLanguage = "fr-FR"; // Unsupported language
 
         _mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
 

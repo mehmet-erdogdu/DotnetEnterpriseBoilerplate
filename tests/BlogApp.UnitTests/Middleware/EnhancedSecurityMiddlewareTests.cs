@@ -29,7 +29,7 @@ public class EnhancedSecurityMiddlewareTests : BaseTestClass
     public async Task InvokeAsync_WithNormalUserAgent_ShouldCallNext()
     {
         // Arrange
-        _httpContext.Request.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+        _httpContext.Request.Headers.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
         _httpContext.Connection.RemoteIpAddress = IPAddress.Parse("8.8.8.8");
 
         // Act
@@ -45,7 +45,7 @@ public class EnhancedSecurityMiddlewareTests : BaseTestClass
     public async Task InvokeAsync_WithSuspiciousUserAgent_ShouldBlockRequest()
     {
         // Arrange
-        _httpContext.Request.Headers["User-Agent"] = "python-requests/2.28.1";
+        _httpContext.Request.Headers.UserAgent = "python-requests/2.28.1";
         _httpContext.Connection.RemoteIpAddress = IPAddress.Parse("8.8.8.8");
         _httpContext.Response.Body = new MemoryStream();
 
@@ -89,7 +89,7 @@ public class EnhancedSecurityMiddlewareTests : BaseTestClass
     public async Task InvokeAsync_WithVariousSuspiciousUserAgents_ShouldBlockRequest(string suspiciousPattern)
     {
         // Arrange
-        _httpContext.Request.Headers["User-Agent"] = $"MyApp/{suspiciousPattern}/1.0";
+        _httpContext.Request.Headers.UserAgent = $"MyApp/{suspiciousPattern}/1.0";
         _httpContext.Connection.RemoteIpAddress = IPAddress.Parse("8.8.8.8");
         _httpContext.Response.Body = new MemoryStream();
 
@@ -108,7 +108,7 @@ public class EnhancedSecurityMiddlewareTests : BaseTestClass
     public async Task InvokeAsync_WithEmptyUserAgent_ShouldBlockRequest()
     {
         // Arrange
-        _httpContext.Request.Headers["User-Agent"] = "";
+        _httpContext.Request.Headers.UserAgent = "";
         _httpContext.Connection.RemoteIpAddress = IPAddress.Parse("8.8.8.8");
         _httpContext.Response.Body = new MemoryStream();
 
@@ -150,7 +150,7 @@ public class EnhancedSecurityMiddlewareTests : BaseTestClass
     public async Task InvokeAsync_WithSuspiciousIpAddress_ShouldBlockRequest(string suspiciousIp)
     {
         // Arrange
-        _httpContext.Request.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+        _httpContext.Request.Headers.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
         _httpContext.Connection.RemoteIpAddress = IPAddress.Parse(suspiciousIp);
         _httpContext.Response.Body = new MemoryStream();
 
@@ -180,7 +180,7 @@ public class EnhancedSecurityMiddlewareTests : BaseTestClass
     public async Task InvokeAsync_WithXForwardedForHeader_ShouldUseForwardedIp()
     {
         // Arrange
-        _httpContext.Request.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+        _httpContext.Request.Headers.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
         _httpContext.Request.Headers["X-Forwarded-For"] = "203.0.113.1, 70.41.3.18, 150.172.238.178";
         _httpContext.Connection.RemoteIpAddress = IPAddress.Parse("192.168.1.1");
 
@@ -196,7 +196,7 @@ public class EnhancedSecurityMiddlewareTests : BaseTestClass
     public async Task InvokeAsync_WithXRealIpHeader_ShouldUseRealIp()
     {
         // Arrange
-        _httpContext.Request.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+        _httpContext.Request.Headers.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
         _httpContext.Request.Headers["X-Real-IP"] = "203.0.113.1";
         _httpContext.Connection.RemoteIpAddress = IPAddress.Parse("192.168.1.1");
 
@@ -212,7 +212,7 @@ public class EnhancedSecurityMiddlewareTests : BaseTestClass
     public async Task InvokeAsync_WithNullRemoteIp_ShouldUseUnknown()
     {
         // Arrange
-        _httpContext.Request.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+        _httpContext.Request.Headers.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
         _httpContext.Connection.RemoteIpAddress = null;
 
         // Act
@@ -227,7 +227,7 @@ public class EnhancedSecurityMiddlewareTests : BaseTestClass
     public async Task InvokeAsync_ShouldSetSecurityContext()
     {
         // Arrange
-        _httpContext.Request.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
+        _httpContext.Request.Headers.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36";
         _httpContext.Connection.RemoteIpAddress = IPAddress.Parse("8.8.8.8");
 
         // Act

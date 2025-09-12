@@ -9,7 +9,7 @@ public class GetAllUsersQueryHandler(
         try
         {
             // Get users with pagination
-            var users = userManager.Users.ToList();
+            var users = await userManager.Users.ToListAsync(cancellationToken);
 
             // Apply search filter if provided
             if (!string.IsNullOrWhiteSpace(request.Search))

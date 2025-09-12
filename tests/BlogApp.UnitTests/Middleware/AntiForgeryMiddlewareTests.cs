@@ -219,7 +219,7 @@ public class AntiForgeryMiddlewareTests
         _nextMock.Verify(n => n(context), Times.Once);
     }
 
-    private HttpContext CreateHttpContext(string method)
+    private DefaultHttpContext CreateHttpContext(string method)
     {
         var context = new DefaultHttpContext();
         var services = new ServiceCollection();

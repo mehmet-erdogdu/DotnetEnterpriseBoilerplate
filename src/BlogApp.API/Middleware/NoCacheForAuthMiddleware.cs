@@ -7,17 +7,17 @@ public class NoCacheForAuthMiddleware(RequestDelegate next)
         if (context.Request.Path.StartsWithSegments("/api/auth"))
         {
             // Set immediately so tests and downstream code can observe headers even before response starts
-            context.Response.Headers["Cache-Control"] = "no-store";
-            context.Response.Headers["Pragma"] = "no-cache";
-            context.Response.Headers["Expires"] = "0";
+            context.Response.Headers.CacheControl = "no-store";
+            context.Response.Headers.Pragma = "no-cache";
+            context.Response.Headers.Expires = "0";
 
             // Also enforce via OnStarting to ensure headers are present when response is sent
             context.Response.OnStarting(state =>
             {
                 var httpContext = (HttpContext)state!;
-                httpContext.Response.Headers["Cache-Control"] = "no-store";
-                httpContext.Response.Headers["Pragma"] = "no-cache";
-                httpContext.Response.Headers["Expires"] = "0";
+                httpContext.Response.Headers.CacheControl = "no-store";
+                httpContext.Response.Headers.Pragma = "no-cache";
+                httpContext.Response.Headers.Expires = "0";
                 return Task.CompletedTask;
             }, context);
         }

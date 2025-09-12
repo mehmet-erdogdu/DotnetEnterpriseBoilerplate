@@ -25,17 +25,15 @@ public class ApplicationDbContext(
         base.OnModelCreating(builder);
 
         // Global query filters for soft delete
-        builder.Model.GetEntityTypes()
-            .Where(entityType => typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
-            .Select(entityType =>
-            {
-                var parameter = Expression.Parameter(entityType.ClrType, "e");
-                var property = Expression.Property(parameter, nameof(ISoftDeletable.IsDeleted));
-                var compare = Expression.Equal(property, Expression.Constant(false));
-                var lambda = Expression.Lambda(compare, parameter);
-                builder.Entity(entityType.ClrType).HasQueryFilter(lambda);
-                return entityType;
-            }).ToList();
+        foreach (var entityType in builder.Model.GetEntityTypes()
+            .Where(entityType => typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType)))
+        {
+            var parameter = Expression.Parameter(entityType.ClrType, "e");
+            var property = Expression.Property(parameter, nameof(ISoftDeletable.IsDeleted));
+            var compare = Expression.Equal(property, Expression.Constant(false));
+            var lambda = Expression.Lambda(compare, parameter);
+            builder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+        }
 
         // Apply TickerQ entity configurations explicitly
         builder.ApplyConfiguration(new TimeTickerConfigurations());

@@ -74,7 +74,7 @@ function isMessageServiceFile(filePath) {
 
 function isGlobalUsingsFile(filePath) {
   const normalized = filePath.replace(/\\/g, '/');
-  return /GlobalUsings\.cs$/.test(normalized);
+  return normalized.endsWith('GlobalUsings.cs');
 }
 
 function getDefaultTargets() {
