@@ -38,11 +38,6 @@ public class ApplicationDbContext(
                 builder.Entity(entityType).HasQueryFilter(lambda);
             });
 
-        // Apply TickerQ entity configurations explicitly
-        builder.ApplyConfiguration(new TimeTickerConfigurations());
-        builder.ApplyConfiguration(new CronTickerConfigurations());
-        builder.ApplyConfiguration(new CronTickerOccurrenceConfigurations());
-
         builder.Entity<Post>()
             .HasOne(p => p.Author)
             .WithMany(u => u.Posts)

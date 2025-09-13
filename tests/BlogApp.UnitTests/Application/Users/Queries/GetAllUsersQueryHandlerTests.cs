@@ -1,5 +1,3 @@
-using BlogApp.Application.Users.Queries;
-
 namespace BlogApp.UnitTests.Application.Users.Queries;
 
 public class GetAllUsersQueryHandlerTests : BaseApplicationTest

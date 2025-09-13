@@ -58,10 +58,6 @@
       "Microsoft.EntityFrameworkCore": "Information"
     }
   },
-  "TickerQBasicAuth": {
-    "Password": "admin",
-    "Username": "admin"
-  },
   "_BUILD_SECURITY": "Docker builds automatically exclude this file. See DOCKER_SECURITY.md for details",
   "_SECURITY_WARNING": "This file contains development secrets only. Never use in production. Excluded from Docker builds via .dockerignore"
 }

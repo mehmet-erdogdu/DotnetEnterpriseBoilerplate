@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using VaultSharp;
 using VaultSharp.V1.AuthMethods.Token;
 
@@ -177,8 +176,6 @@ public static class VaultHelper
             ["APIUrl"] = "http://localhost",
             ["FrontendUrls"] = "http://localhost:3000,https://localhost:7266",
             ["KnownProxies"] = "127.0.0.1",
-            ["TickerQBasicAuth:Username"] = "u",
-            ["TickerQBasicAuth:Password"] = "p",
             ["JWT:RefreshTokenExpirationDays"] = "7",
             ["JWT:Secret"] = new('x', 64),
             ["JWT:TokenExpirationMinutes"] = "60",

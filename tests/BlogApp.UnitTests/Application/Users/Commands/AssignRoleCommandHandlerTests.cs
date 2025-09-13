@@ -1,5 +1,3 @@
-using BlogApp.Application.Users.Commands;
-
 namespace BlogApp.UnitTests.Application.Users.Commands;
 
 public class AssignRoleCommandHandlerTests : BaseApplicationTest

@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using ValidationException = FluentValidation.ValidationException;
 
 namespace BlogApp.Application.Common.Behaviors;

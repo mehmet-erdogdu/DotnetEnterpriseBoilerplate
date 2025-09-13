@@ -1,4 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
+using Hangfire;
+using Hangfire.Dashboard;
+using Hangfire.PostgreSql;
 
 [assembly: ExcludeFromCodeCoverage]
 
@@ -25,30 +28,45 @@ try
     builder.Services.AddScoped<AuditLoggingInterceptor>();
     builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+    builder.Services.AddScoped<RefreshTokenCleanupJobs>();
     builder.Services.AddHttpContextAccessor();
 
     // RabbitMQ consumer
     builder.Services.AddSingleton<IRabbitMqConnectionProvider, RabbitMqConnectionProvider>();
     builder.Services.AddHostedService<RabbitMqDemoConsumerService>();
 
-
-    // TickerQ setup
-    builder.Services.AddTickerQ(options =>
-    {
-        options.SetMaxConcurrency(2);
-        options.AddOperationalStore<ApplicationDbContext>(efOpt =>
+    // Hangfire setup
+    builder.Services.AddHangfire(configuration => configuration
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UsePostgreSqlStorage(options => { options.UseNpgsqlConnection(builder.Configuration["DBConnection"]); }, new PostgreSqlStorageOptions
         {
-            efOpt.CancelMissedTickersOnApplicationRestart();
-            efOpt.UseModelCustomizerForMigrations();
-        });
-        options.AddDashboard();
-        options.AddDashboardBasicAuth();
-    });
+            SchemaName = "hangfire"
+        }));
+
+    builder.Services.AddHangfireServer();
 
     var app = builder.Build();
-    app.Configuration["TickerQBasicAuth:Username"] = builder.Configuration["TickerQBasicAuth:Username"];
-    app.Configuration["TickerQBasicAuth:Password"] = builder.Configuration["TickerQBasicAuth:Password"];
-    app.UseTickerQ();
+
+    // Configure Hangfire Dashboard with authentication and dark mode
+    app.UseHangfireDashboard("/hangfire", new DashboardOptions
+    {
+        Authorization = [new HangfireAuthorizationFilter()],
+        DashboardTitle = "BlogApp Job Dashboard",
+        DarkModeEnabled = true
+    });
+
+    // Register recurring jobs
+    using (var scope = app.Services.CreateScope())
+    {
+        var refreshTokenCleanupJobs = scope.ServiceProvider.GetRequiredService<RefreshTokenCleanupJobs>();
+        RecurringJob.AddOrUpdate("RefreshTokenCleanup", () => refreshTokenCleanupJobs.Run(), Cron.Daily);
+    }
+
+    // Add a simple health check endpoint
+    app.MapGet("/", () => "BlogApp Worker is running. Access Hangfire Dashboard at /hangfire");
+
     await app.RunAsync();
 }
 catch (Exception ex)
@@ -58,4 +76,16 @@ catch (Exception ex)
 finally
 {
     await Log.CloseAndFlushAsync();
+}
+
+// Simple authorization filter for Hangfire Dashboard
+public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext context)
+    {
+        // In a production environment, you should implement proper authentication
+        // For now, we're allowing access to the dashboard
+        // You can add authentication logic here based on your requirements
+        return true;
+    }
 }

@@ -17,8 +17,6 @@ public static class TestHelper
             ["KnownProxies"] = "127.0.0.1",
             ["Firebase:ProjectId"] = "test-project-id",
             ["Firebase:ServiceAccountKeyPath"] = "test-service-account-key.json",
-            ["TickerQBasicAuth:Username"] = "admin",
-            ["TickerQBasicAuth:Password"] = "admin",
             ["RabbitMQ:HostName"] = "localhost",
             ["RabbitMQ:Port"] = "5672",
             ["RabbitMQ:UserName"] = "guest",

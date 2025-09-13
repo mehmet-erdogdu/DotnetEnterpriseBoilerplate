@@ -16,7 +16,3 @@ global using System.Collections.Generic;
 global using System.Linq;
 global using System.Text;
 global using System.Threading.Tasks;
-global using TickerQ.Dashboard.DependencyInjection;
-global using TickerQ.DependencyInjection;
-global using TickerQ.EntityFrameworkCore.DependencyInjection;
-global using TickerQ.Utilities.Base;

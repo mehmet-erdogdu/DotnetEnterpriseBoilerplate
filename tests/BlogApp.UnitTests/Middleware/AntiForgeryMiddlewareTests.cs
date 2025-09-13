@@ -168,7 +168,7 @@ public class AntiForgeryMiddlewareTests
         // Arrange
         var context = CreateHttpContext("POST");
         context.Request.Headers.Origin = "https://api.example.com";
-        context.Request.Headers.Referer = "https://api.example.com/swagger";
+        context.Request.Headers.Referer = "https://api.example.com/scalar";
 
         _configurationMock.Setup(c => c["FrontendUrls"]).Returns((string?)null);
         _configurationMock.Setup(c => c["APIUrl"]).Returns("https://api.example.com");
@@ -188,7 +188,7 @@ public class AntiForgeryMiddlewareTests
         // Arrange
         var context = CreateHttpContext("POST");
         context.Request.Headers.Origin = "https://api.example.com";
-        context.Request.Headers.Referer = "https://api.example.com/swagger";
+        context.Request.Headers.Referer = "https://api.example.com/scalar";
 
         _configurationMock.Setup(c => c["FrontendUrls"]).Returns(emptyUrl);
         _configurationMock.Setup(c => c["APIUrl"]).Returns("https://api.example.com");

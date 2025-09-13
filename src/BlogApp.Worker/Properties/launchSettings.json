@@ -4,6 +4,9 @@
     "BlogApp.Worker": {
       "commandName": "Project",
       "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "hangfire",
+      "applicationUrl": "https://localhost:5000",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }

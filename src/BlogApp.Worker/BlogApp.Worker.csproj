@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Hangfire.Dashboard.Dark" Version="2.0.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -15,8 +16,8 @@
         <PackageReference Include="RabbitMQ.Client" Version="6.8.1"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0"/>
-        <PackageReference Include="TickerQ" Version="2.4.4"/>
-        <PackageReference Include="TickerQ.Dashboard" Version="2.4.4"/>
+        <PackageReference Include="Hangfire" Version="1.8.21"/>
+        <PackageReference Include="Hangfire.PostgreSql" Version="1.20.10"/>
     </ItemGroup>
 
     <ItemGroup>
