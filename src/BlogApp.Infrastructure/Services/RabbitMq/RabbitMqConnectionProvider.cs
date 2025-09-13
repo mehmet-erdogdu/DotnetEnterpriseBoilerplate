@@ -16,7 +16,7 @@ public class RabbitMqConnectionProvider(IConfiguration configuration) : IRabbitM
         UserName = configuration["RabbitMQ:UserName"]!,
         Password = configuration["RabbitMQ:Password"]!,
         VirtualHost = configuration["RabbitMQ:VirtualHost"]!,
-        DispatchConsumersAsync = true
+        ClientProvidedName = "blogapp-connection"
     };
 
     private IConnection? _connection;
@@ -27,7 +27,7 @@ public class RabbitMqConnectionProvider(IConfiguration configuration) : IRabbitM
         if (_connection is { IsOpen: true })
             return _connection;
         _connection?.Dispose();
-        _connection = _connectionFactory.CreateConnection("blogapp-connection");
+        _connection = _connectionFactory.CreateConnectionAsync().GetAwaiter().GetResult();
         return _connection;
     }
 

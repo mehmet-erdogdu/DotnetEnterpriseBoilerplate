@@ -9,31 +9,33 @@ public class RabbitMqDemoConsumerService(IRabbitMqConnectionProvider connectionP
     {
         await Task.Yield();
         var connection = connectionProvider.GetConnection();
-        var channel = connection.CreateModel();
-        channel.ExchangeDeclare("blogapp.exchange", ExchangeType.Topic, true);
-        var queue = channel.QueueDeclare("blogapp.posts.queue", true, false, false);
-        channel.QueueBind(queue.QueueName, "blogapp.exchange", "post.*");
+        // Use CreateChannelAsync instead of CreateModel in v7
+        var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken);
+        await channel.ExchangeDeclareAsync("blogapp.exchange", ExchangeType.Topic, true, cancellationToken: stoppingToken);
+        var queue = await channel.QueueDeclareAsync("blogapp.posts.queue", true, false, false, cancellationToken: stoppingToken);
+        await channel.QueueBindAsync(queue.QueueName, "blogapp.exchange", "post.*", cancellationToken: stoppingToken);
 
+        // Use AsyncEventingBasicConsumer with the correct event handler
         var consumer = new AsyncEventingBasicConsumer(channel);
-        consumer.Received += async (_, ea) =>
+        consumer.ReceivedAsync += async (_, ea) =>
         {
             try
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                logger.LogInformation("RabbitMQ received: {Message}", message);
+                logger.LogWarning("RabbitMQ received: {Message}", message);
                 // Simulate processing
                 await Task.Delay(10, stoppingToken);
-                channel.BasicAck(ea.DeliveryTag, false);
+                await channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error processing RabbitMQ message");
-                channel.BasicNack(ea.DeliveryTag, false, true);
+                await channel.BasicNackAsync(ea.DeliveryTag, false, true, cancellationToken: stoppingToken);
             }
         };
 
-        channel.BasicConsume(queue.QueueName, false, consumer);
+        await channel.BasicConsumeAsync(queue.QueueName, false, consumer, cancellationToken: stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested) await Task.Delay(1000, stoppingToken);
     }

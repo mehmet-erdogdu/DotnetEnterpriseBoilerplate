@@ -9,18 +9,13 @@ public interface IRabbitMqPublisher
 
 public class RabbitMqPublisher(IRabbitMqConnectionProvider connectionProvider) : IRabbitMqPublisher
 {
-    public Task PublishAsync<T>(string exchange, string routingKey, T message, CancellationToken cancellationToken = default)
+    public async Task PublishAsync<T>(string exchange, string routingKey, T message, CancellationToken cancellationToken = default)
     {
         var connection = connectionProvider.GetConnection();
-        using var channel = connection.CreateModel();
-        channel.ExchangeDeclare(exchange, ExchangeType.Topic, true);
-
-        var props = channel.CreateBasicProperties();
-        props.Persistent = true;
-        props.ContentType = "application/json";
+        await using var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
+        await channel.ExchangeDeclareAsync(exchange, ExchangeType.Topic, true, cancellationToken: cancellationToken);
 
         var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
-        channel.BasicPublish(exchange, routingKey, props, body);
-        return Task.CompletedTask;
+        await channel.BasicPublishAsync(exchange, routingKey, body, cancellationToken: cancellationToken);
     }
 }
