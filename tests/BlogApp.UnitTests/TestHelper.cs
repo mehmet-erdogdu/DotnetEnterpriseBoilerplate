@@ -32,9 +32,6 @@ public static class TestHelper
             ["JWT:TokenExpirationMinutes"] = "30",
             ["JWT:ValidAudience"] = "test-aud",
             ["JWT:ValidIssuer"] = "test-iss",
-            ["Logging:LogLevel:Default"] = "Information",
-            ["Logging:LogLevel:Microsoft.AspNetCore"] = "Information",
-            ["Logging:LogLevel:Microsoft.EntityFrameworkCore"] = "Information",
             ["RateLimiting:AuthLimit"] = "10",
             ["RateLimiting:AuthWindowMinutes"] = "1",
             ["RateLimiting:GlobalLimit"] = "100",
@@ -44,6 +41,7 @@ public static class TestHelper
             ["Security:MaxLoginAttempts"] = "5",
             ["Security:PasswordHistoryCount"] = "5",
             ["Security:RequireHttps"] = "true",
+            ["Serilog:GlobalLogLevel"] = "Information",
             ["Serilog:MinimumLevel:Default"] = "Information",
             ["Serilog:MinimumLevel:Microsoft"] = "Information",
             ["Serilog:MinimumLevel:Microsoft.AspNetCore"] = "Information",
@@ -113,7 +111,7 @@ public static class TestHelper
                 Email = email ?? "test@example.com",
                 UserName = email ?? "test@example.com",
                 FirstName = "Test",
-                LastName = "User",
+                LastName = "Test",
                 EmailConfirmed = true
             };
         }

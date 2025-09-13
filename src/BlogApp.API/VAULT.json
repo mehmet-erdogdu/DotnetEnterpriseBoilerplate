@@ -13,18 +13,11 @@
   "JWT": {
     "RefreshTokenExpirationDays": 7,
     "Secret": "p67xwD9gQ1rZ8tU2mC5vN0sY4bH7kJ3pL6qR9eT1uW4xY7zA0cV3bN6mP9qS2tU",
-    "TokenExpirationMinutes": 300000,
+    "TokenExpirationMinutes": 30,
     "ValidAudience": "https://localhost:7266",
     "ValidIssuer": "https://localhost:7266"
   },
   "KnownProxies": "127.0.0.1",
-  "Logging": {
-    "LogLevel": {
-      "Default": "Warning",
-      "Microsoft.AspNetCore": "Warning",
-      "Microsoft.EntityFrameworkCore": "Warning"
-    }
-  },
   "RabbitMQ": {
     "HostName": "localhost",
     "Password": "guest",
@@ -33,10 +26,10 @@
     "VirtualHost": "/"
   },
   "RateLimiting": {
-    "AuthLimit": 5,
-    "AuthWindowMinutes": 10,
-    "GlobalLimit": 50,
-    "QueueLimit": 1,
+    "AuthLimit": 10,
+    "AuthWindowMinutes": 5,
+    "GlobalLimit": 100,
+    "QueueLimit": 2,
     "WindowMinutes": 1
   },
   "RedisConnection": "localhost:6379,password=redis123",
@@ -47,17 +40,18 @@
     "BucketName": "blogapp-files"
   },
   "Security": {
-    "LockoutDurationMinutes": 30,
-    "MaxLoginAttempts": 3,
-    "PasswordHistoryCount": 8,
+    "LockoutDurationMinutes": 15,
+    "MaxLoginAttempts": 5,
+    "PasswordHistoryCount": 5,
     "RequireHttps": true
   },
   "Serilog": {
+    "GlobalLogLevel": "Information",
     "MinimumLevel": {
-      "Default": "Warning",
-      "Microsoft": "Warning",
-      "Microsoft.AspNetCore": "Warning",
-      "Microsoft.EntityFrameworkCore": "Warning"
+      "Default": "Information",
+      "Microsoft": "Information",
+      "Microsoft.AspNetCore": "Information",
+      "Microsoft.EntityFrameworkCore": "Information"
     }
   },
   "TickerQBasicAuth": {

@@ -31,7 +31,8 @@ public static class VaultHelper
             var flattened = FlattenVaultData(data);
             Console.WriteLine($"Flattened data: {flattened.Count} items");
 
-            foreach (var kvp in flattened.Take(5)) Console.WriteLine($"  {kvp.Key} = {kvp.Value}");
+            foreach (var kvp in flattened.Take(5))
+                Console.WriteLine($"  {kvp.Key} = {kvp.Value}");
 
             if (flattened.Count == 0)
                 throw new InvalidOperationException("Vault can not initialize.");
@@ -191,9 +192,6 @@ public static class VaultHelper
             ["RabbitMQ:UserName"] = "guest",
             ["RabbitMQ:Password"] = "guest",
             ["RabbitMQ:VirtualHost"] = "/",
-            ["Logging:LogLevel:Default"] = WarningLevel,
-            ["Logging:LogLevel:Microsoft.AspNetCore"] = WarningLevel,
-            ["Logging:LogLevel:Microsoft.EntityFrameworkCore"] = WarningLevel,
             ["RateLimiting:AuthLimit"] = "5",
             ["RateLimiting:AuthWindowMinutes"] = "1",
             ["RateLimiting:GlobalLimit"] = "50",
@@ -203,6 +201,7 @@ public static class VaultHelper
             ["Security:MaxLoginAttempts"] = "5",
             ["Security:PasswordHistoryCount"] = "5",
             ["Security:RequireHttps"] = "false",
+            ["Serilog:GlobalLogLevel"] = WarningLevel,
             ["Serilog:MinimumLevel:Default"] = WarningLevel,
             ["Serilog:MinimumLevel:Microsoft"] = WarningLevel,
             ["Serilog:MinimumLevel:Microsoft.AspNetCore"] = WarningLevel,

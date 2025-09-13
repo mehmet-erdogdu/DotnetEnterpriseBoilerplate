@@ -11,11 +11,18 @@ public static class SerilogHelper
 {
     public static void ConfigureSerilog(this WebApplicationBuilder builder)
     {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
+        // Get the Serilog configuration section
+        var serilogConfig = builder.Configuration.GetSection("Serilog");
+        var minimumLevelConfig = serilogConfig.GetSection("MinimumLevel");
+        
+        // Get the global log level from Serilog section, fallback to Information if not set
+        var globalLogLevel = GetLogEventLevel(serilogConfig["GlobalLogLevel"] ?? "Information");
+        
+        // Get the default log level, fallback to global log level if not set
+        var defaultLevel = GetLogEventLevel(minimumLevelConfig["Default"] ?? serilogConfig["GlobalLogLevel"] ?? "Information");
+        
+        var loggerConfig = new LoggerConfiguration()
+            .MinimumLevel.Is(defaultLevel)
             .Enrich.FromLogContext()
             .Enrich.WithMachineName()
             .Enrich.WithThreadId()
@@ -34,8 +41,34 @@ public static class SerilogHelper
                     Console.WriteLine("Unable to submit event " + logEvent.MessageTemplate + (exception != null ? "; Exception: " + exception.Message : string.Empty)),
                 EmitEventFailure = EmitEventFailureHandling.WriteToSelfLog |
                                    EmitEventFailureHandling.RaiseCallback
-            })
-            .CreateLogger();
+            });
+
+        // Apply overrides from configuration if they exist
+        ApplyLogLevelOverride(loggerConfig, "Microsoft", minimumLevelConfig["Microsoft"], globalLogLevel);
+        ApplyLogLevelOverride(loggerConfig, "Microsoft.AspNetCore", minimumLevelConfig["Microsoft.AspNetCore"], globalLogLevel);
+        ApplyLogLevelOverride(loggerConfig, "Microsoft.EntityFrameworkCore", minimumLevelConfig["Microsoft.EntityFrameworkCore"], globalLogLevel);
+
+        Log.Logger = loggerConfig.CreateLogger();
         builder.Host.UseSerilog();
+    }
+
+    private static void ApplyLogLevelOverride(LoggerConfiguration loggerConfig, string source, string? level, LogEventLevel defaultLevel)
+    {
+        var logLevel = string.IsNullOrEmpty(level) ? defaultLevel : GetLogEventLevel(level);
+        loggerConfig.MinimumLevel.Override(source, logLevel);
+    }
+
+    private static LogEventLevel GetLogEventLevel(string level)
+    {
+        return level.ToLower() switch
+        {
+            "verbose" => LogEventLevel.Verbose,
+            "debug" => LogEventLevel.Debug,
+            "information" => LogEventLevel.Information,
+            "warning" => LogEventLevel.Warning,
+            "error" => LogEventLevel.Error,
+            "fatal" => LogEventLevel.Fatal,
+            _ => LogEventLevel.Information
+        };
     }
 }

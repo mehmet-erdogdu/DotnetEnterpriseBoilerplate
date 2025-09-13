@@ -31,7 +31,7 @@ services:
       vault kv put secret/BLOG_APP @/vault/bootstrap/VAULT.json && \
       wait"
     volumes:
-      - /Users/mehmet-erdogdu/Documents/Git/ai-blogApp/src/BlogApp.API/VAULT.json:/vault/bootstrap/VAULT.json:ro
+      - /Users/mehmet-erdogdu/Documents/Git/ai/DotnetEnterpriseBoilerplate/src/BlogApp.API/VAULT.json:/vault/bootstrap/VAULT.json:ro
     networks:
       - app_network
 
