@@ -1,8 +1,5 @@
 {
-  "_SECURITY_WARNING": "This file contains development secrets only. Never use in production. Excluded from Docker builds via .dockerignore",
-  "_BUILD_SECURITY": "Docker builds automatically exclude this file. See DOCKER_SECURITY.md for details",
   "APIUrl": "https://localhost:7266",
-  "FrontendUrls": "http://localhost:3000,https://localhost:7266",
   "AllowedHosts": "*",
   "DBConnection": "Host=localhost;Port=5432;Database=blogapp;Username=blogapp;Password=blogapp123;SslMode=Disable;",
   "ElasticUrl": "http://localhost:9200",
@@ -10,6 +7,7 @@
     "ProjectId": "your-firebase-project-id",
     "ServiceAccountKeyPath": "path/to/your/serviceAccountKey.json"
   },
+  "FrontendUrls": "http://localhost:3000,https://localhost:7266",
   "JWT": {
     "RefreshTokenExpirationDays": 7,
     "Secret": "p67xwD9gQ1rZ8tU2mC5vN0sY4bH7kJ3pL6qR9eT1uW4xY7zA0cV3bN6mP9qS2tU",
@@ -32,12 +30,18 @@
     "QueueLimit": 2,
     "WindowMinutes": 1
   },
+  "React": {
+    "APP_NAME": "BlogApp CMS",
+    "DEBUG_MODE": "true",
+    "ENVIRONMENT": "development",
+    "VERSION": "0.1.0"
+  },
   "RedisConnection": "localhost:6379,password=redis123",
   "S3": {
     "AccessKeyId": "minioadmin",
+    "BucketName": "blogapp-files",
     "SecretAccessKey": "minioadmin123",
-    "Url": "http://localhost:9002",
-    "BucketName": "blogapp-files"
+    "Url": "http://localhost:9002"
   },
   "Security": {
     "LockoutDurationMinutes": 15,
@@ -58,10 +62,6 @@
     "Password": "admin",
     "Username": "admin"
   },
-  "React": {
-    "APP_NAME": "BlogApp CMS",
-    "VERSION": "0.1.0",
-    "ENVIRONMENT": "development",
-    "DEBUG_MODE": "true"
-  }
+  "_BUILD_SECURITY": "Docker builds automatically exclude this file. See DOCKER_SECURITY.md for details",
+  "_SECURITY_WARNING": "This file contains development secrets only. Never use in production. Excluded from Docker builds via .dockerignore"
 }
