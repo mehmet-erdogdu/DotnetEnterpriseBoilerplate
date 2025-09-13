@@ -22,8 +22,13 @@ public class DatabaseSeeder
             var seeders = new ISeeder[]
             {
                 new UserSeeder(),
+                new RoleSeeder(),
+                new UserRoleSeeder(),
+                new RoleClaimSeeder(),
                 new PostSeeder(),
-                new TodoSeeder()
+                new TodoSeeder(),
+                new PasswordHistorySeeder(),
+                new RefreshTokenSeeder()
             };
 
             foreach (var seeder in seeders)
