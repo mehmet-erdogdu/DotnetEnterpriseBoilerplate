@@ -5,7 +5,7 @@ public class UserSeeder : ISeeder
     public async Task SeedAsync(ApplicationDbContext context)
     {
         // Check if users already exist
-        if (context.Users.Any())
+        if (await context.Users.AnyAsync())
             return;
 
         var hasher = new PasswordHasher<ApplicationUser>();

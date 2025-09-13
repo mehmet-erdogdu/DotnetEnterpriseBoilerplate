@@ -5,7 +5,7 @@ public class RefreshTokenSeeder : ISeeder
     public async Task SeedAsync(ApplicationDbContext context)
     {
         // Check if refresh tokens already exist
-        if (context.RefreshToken.Any())
+        if (await context.RefreshToken.AnyAsync())
             return;
 
         // Get users for refresh tokens

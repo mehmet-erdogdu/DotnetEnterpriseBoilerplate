@@ -313,10 +313,11 @@ public class RedisCacheServiceTests
         var pattern = "test:*";
 
         // Act
-        await _cacheService.RemoveByPatternAsync(pattern);
+        Func<Task> act = () => _cacheService.RemoveByPatternAsync(pattern);
 
         // Assert
         // Since we can't easily mock ConnectionMultiplexer, we just verify the method doesn't throw
+        await act.Should().NotThrowAsync();
         // In a real implementation, you would verify the actual removal logic
     }
 
@@ -336,10 +337,11 @@ public class RedisCacheServiceTests
             null)!;
 
         // Act
-        await faultyCacheService.RemoveByPatternAsync(pattern);
+        Func<Task> act = () => faultyCacheService.RemoveByPatternAsync(pattern);
 
         // Assert
         // Should not throw exception even when connection fails
+        await act.Should().NotThrowAsync();
     }
 
     [Fact]

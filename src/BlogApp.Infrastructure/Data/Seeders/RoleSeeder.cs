@@ -5,7 +5,7 @@ public class RoleSeeder : ISeeder
     public async Task SeedAsync(ApplicationDbContext context)
     {
         // Check if roles already exist
-        if (context.Roles.Any())
+        if (await context.Roles.AnyAsync())
             return;
 
         var roles = new List<IdentityRole>

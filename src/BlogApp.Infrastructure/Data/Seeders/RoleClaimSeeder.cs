@@ -5,7 +5,7 @@ public class RoleClaimSeeder : ISeeder
     public async Task SeedAsync(ApplicationDbContext context)
     {
         // Check if role claims already exist
-        if (context.RoleClaims.Any())
+        if (await context.RoleClaims.AnyAsync())
             return;
 
         // Get roles

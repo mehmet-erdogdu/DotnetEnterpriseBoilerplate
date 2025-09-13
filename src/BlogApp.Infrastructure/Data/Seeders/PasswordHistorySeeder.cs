@@ -5,7 +5,7 @@ public class PasswordHistorySeeder : ISeeder
     public async Task SeedAsync(ApplicationDbContext context)
     {
         // Check if password histories already exist
-        if (context.PasswordHistory.Any())
+        if (await context.PasswordHistory.AnyAsync())
             return;
 
         // Get users for password history

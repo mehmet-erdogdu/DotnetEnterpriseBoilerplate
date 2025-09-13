@@ -78,6 +78,7 @@ finally
     await Log.CloseAndFlushAsync();
 }
 
+
 // Simple authorization filter for Hangfire Dashboard
 public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
 {

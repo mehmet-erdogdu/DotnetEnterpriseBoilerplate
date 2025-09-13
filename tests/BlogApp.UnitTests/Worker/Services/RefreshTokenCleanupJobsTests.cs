@@ -34,7 +34,7 @@ public class RefreshTokenCleanupJobsTests
             x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Hangfire cleanup executed")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Hangfire cleanup executed") == true),
                 null,
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

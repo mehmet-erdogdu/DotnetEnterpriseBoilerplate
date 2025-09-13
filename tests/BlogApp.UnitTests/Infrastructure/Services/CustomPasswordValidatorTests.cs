@@ -95,7 +95,7 @@ public class CustomPasswordValidatorTests : BaseInfrastructureTest
         await act.Should().ThrowAsync<Exception>().WithMessage("Database error");
     }
 
-    private Mock<UserManager<TestUser>> CreateMockUserManager()
+    private static Mock<UserManager<TestUser>> CreateMockUserManager()
     {
         var userStore = new Mock<IUserStore<TestUser>>();
         var mockUserManager = new Mock<UserManager<TestUser>>(

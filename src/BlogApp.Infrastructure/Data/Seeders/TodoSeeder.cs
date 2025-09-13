@@ -5,7 +5,7 @@ public class TodoSeeder : ISeeder
     public async Task SeedAsync(ApplicationDbContext context)
     {
         // Check if todos already exist
-        if (context.Todos.Any())
+        if (await context.Todos.AnyAsync())
             return;
 
         // Get users

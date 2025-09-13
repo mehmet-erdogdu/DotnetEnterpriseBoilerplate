@@ -5,7 +5,7 @@ public class UserRoleSeeder : ISeeder
     public async Task SeedAsync(ApplicationDbContext context)
     {
         // Check if user roles already exist
-        if (context.UserRoles.Any())
+        if (await context.UserRoles.AnyAsync())
             return;
 
         // Get users and roles

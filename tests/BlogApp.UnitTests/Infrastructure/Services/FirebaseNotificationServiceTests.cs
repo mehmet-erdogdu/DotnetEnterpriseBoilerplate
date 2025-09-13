@@ -21,10 +21,15 @@ public class FirebaseNotificationServiceTests : BaseInfrastructureTest
     public void Constructor_WithValidConfiguration_DoesNotThrow()
     {
         // Act
-        Action act = () => new FirebaseNotificationService(
-            _mockLogger.Object,
-            _mockCacheService.Object,
-            _mockConfiguration.Object);
+        Action act = () =>
+        {
+            var service = new FirebaseNotificationService(
+                _mockLogger.Object,
+                _mockCacheService.Object,
+                _mockConfiguration.Object);
+            // Use the service to ensure it was created properly
+            _ = service;
+        };
 
         // Assert
         act.Should().NotThrow();

@@ -5,7 +5,7 @@ public class PostSeeder : ISeeder
     public async Task SeedAsync(ApplicationDbContext context)
     {
         // Check if posts already exist
-        if (context.Posts.Any())
+        if (await context.Posts.AnyAsync())
             return;
 
         // Get the first user as author

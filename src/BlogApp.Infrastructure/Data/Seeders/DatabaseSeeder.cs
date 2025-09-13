@@ -42,7 +42,7 @@ public class DatabaseSeeder
         catch (Exception ex)
         {
             logger.LogError(ex, "An error occurred while seeding the database");
-            throw;
+            throw new Exception("Database seeding failed. See inner exception for details.", ex);
         }
     }
 }

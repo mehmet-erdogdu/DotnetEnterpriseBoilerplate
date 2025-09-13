@@ -4,10 +4,10 @@ using BlogApp.Infrastructure.Data;
 using BlogApp.Infrastructure.Data.Seeders;
 using BlogApp.Infrastructure.Helpers;
 using BlogApp.Infrastructure.Interceptors;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 
@@ -17,7 +17,7 @@ internal static class Program
 {
     private static async Task Main(string[] args)
     {
-        var builder = Host.CreateApplicationBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
         Console.WriteLine("Starting App " + DateTime.Now);
 
         // Load secrets from Vault into configuration
@@ -28,7 +28,7 @@ internal static class Program
 
         try
         {
-            Log.Information("Starting BlogApp Seeder");
+            Log.Debug("Starting BlogApp Seeder");
 
             // Add DbContext
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -51,7 +51,7 @@ internal static class Program
 
             var host = builder.Build();
 
-            Log.Information("Starting database seeding...");
+            Log.Debug("Starting database seeding...");
 
             await DatabaseSeeder.SeedDatabaseAsync(host);
             Log.Information("Database seeding completed successfully.");
@@ -69,7 +69,7 @@ internal static class Program
         Console.ReadKey();
     }
 
-    private static void ConfigureSerilog(HostApplicationBuilder builder)
+    private static void ConfigureSerilog(WebApplicationBuilder builder)
     {
         // Get the Serilog configuration section
         var serilogConfig = builder.Configuration.GetSection("Serilog");
@@ -118,7 +118,7 @@ internal static class Program
         };
     }
 
-    private static void ConfigureRepositories(IHostApplicationBuilder builder)
+    private static void ConfigureRepositories(WebApplicationBuilder builder)
     {
         // Repositories and core services
 

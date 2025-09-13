@@ -280,11 +280,9 @@ static void ConfigureAuthentication(WebApplicationBuilder builder)
         });
 
     // Add authorization with policies
-    builder.Services.AddAuthorization(options =>
-    {
-        options.AddPolicy("ViewUsers", policy => policy.RequireClaim("Permission"));
-        options.AddPolicy("ViewRoles", policy => policy.RequireClaim("Permission"));
-    });
+    builder.Services.AddAuthorizationBuilder()
+        .AddPolicy("ViewUsers", policy => policy.RequireClaim("Permission"))
+        .AddPolicy("ViewRoles", policy => policy.RequireClaim("Permission"));
 }
 
 static void ConfigureMediatR(WebApplicationBuilder builder)
