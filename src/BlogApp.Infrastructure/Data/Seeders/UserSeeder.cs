@@ -26,7 +26,7 @@ public class UserSeeder : ISeeder
             CreatedById = "system"
         };
 
-        adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin123!");
+        adminUser.PasswordHash = hasher.HashPassword(adminUser, "B571RaSNL._u");
 
         // Create regular user
         var regularUser = new ApplicationUser
@@ -44,7 +44,7 @@ public class UserSeeder : ISeeder
             CreatedById = "system"
         };
 
-        regularUser.PasswordHash = hasher.HashPassword(regularUser, "User123!");
+        regularUser.PasswordHash = hasher.HashPassword(regularUser, "B571RaSNL._u");
 
         context.Users.AddRange(adminUser, regularUser);
         await context.SaveChangesAsync();
