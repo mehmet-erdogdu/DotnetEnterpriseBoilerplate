@@ -1,20 +1,15 @@
-using BlogApp.Infrastructure.Services.RabbitMq;
 using BlogApp.Worker.Services;
-using Microsoft.Extensions.Logging;
-using Moq;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using System.Text;
 
 namespace BlogApp.UnitTests.Worker.Services;
 
 public class RabbitMqDemoConsumerServiceTests
 {
-    private readonly RabbitMqDemoConsumerService _rabbitMqDemoConsumerService;
+    private readonly Mock<IModel> _mockChannel;
+    private readonly Mock<IConnection> _mockConnection;
     private readonly Mock<IRabbitMqConnectionProvider> _mockConnectionProvider;
     private readonly Mock<ILogger<RabbitMqDemoConsumerService>> _mockLogger;
-    private readonly Mock<IConnection> _mockConnection;
-    private readonly Mock<IModel> _mockChannel;
+    private readonly RabbitMqDemoConsumerService _rabbitMqDemoConsumerService;
 
     public RabbitMqDemoConsumerServiceTests()
     {
@@ -25,7 +20,7 @@ public class RabbitMqDemoConsumerServiceTests
 
         _mockConnectionProvider.Setup(x => x.GetConnection()).Returns(_mockConnection.Object);
         _mockConnection.Setup(x => x.CreateModel()).Returns(_mockChannel.Object);
-        
+
         // Setup channel methods
         var queueDeclareOk = new QueueDeclareOk("blogapp.posts.queue", 0, 0);
         _mockChannel.Setup(x => x.QueueDeclare("blogapp.posts.queue", true, false, false, null))
@@ -45,7 +40,7 @@ public class RabbitMqDemoConsumerServiceTests
 
         // Act
         var task = _rabbitMqDemoConsumerService.StartAsync(cancellationToken);
-        
+
         // Wait a bit for the execution to start
         await Task.Delay(50);
 
@@ -55,7 +50,7 @@ public class RabbitMqDemoConsumerServiceTests
         _mockChannel.Verify(x => x.ExchangeDeclare("blogapp.exchange", ExchangeType.Topic, true, false, null), Times.Once);
         _mockChannel.Verify(x => x.QueueDeclare("blogapp.posts.queue", true, false, false, null), Times.Once);
         _mockChannel.Verify(x => x.QueueBind("blogapp.posts.queue", "blogapp.exchange", "post.*", null), Times.Once);
-        
+
         // Verify that the task didn't fault
         Assert.NotEqual(TaskStatus.Faulted, task.Status);
     }
@@ -70,10 +65,10 @@ public class RabbitMqDemoConsumerServiceTests
         // Act
         var task = _rabbitMqDemoConsumerService.StartAsync(cancellationToken);
         await Task.Delay(50); // Let it start
-        
+
         // Cancel the token
         cancellationTokenSource.Cancel();
-        
+
         // Wait a bit for graceful shutdown
         await Task.Delay(50);
 

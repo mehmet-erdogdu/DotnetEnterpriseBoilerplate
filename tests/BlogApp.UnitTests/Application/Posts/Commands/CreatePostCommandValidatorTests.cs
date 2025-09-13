@@ -1,7 +1,4 @@
 using FluentValidation.TestHelper;
-using Moq;
-using BlogApp.Application.Posts.Commands;
-using BlogApp.Application.Services;
 
 namespace BlogApp.UnitTests.Application.Posts.Commands;
 

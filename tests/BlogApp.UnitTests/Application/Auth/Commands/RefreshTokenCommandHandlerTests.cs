@@ -6,12 +6,14 @@ public class RefreshTokenCommandHandlerTests : BaseTestClass
     private readonly Mock<IConfiguration> _mockConfiguration;
     private readonly Mock<IMessageService> _mockMessageService;
     private readonly Mock<IRefreshTokenService> _mockRefreshTokenService;
+    private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
     private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
 
     public RefreshTokenCommandHandlerTests()
     {
         _mockRefreshTokenService = new Mock<IRefreshTokenService>();
         _mockUserManager = TestHelper.MockSetups.CreateMockUserManager();
+        _mockRoleManager = TestHelper.MockSetups.CreateMockRoleManager();
         _mockMessageService = new Mock<IMessageService>();
         _mockConfiguration = new Mock<IConfiguration>();
 
@@ -24,6 +26,7 @@ public class RefreshTokenCommandHandlerTests : BaseTestClass
         _handler = new RefreshTokenCommandHandler(
             _mockRefreshTokenService.Object,
             _mockUserManager.Object,
+            _mockRoleManager.Object,
             _mockMessageService.Object,
             _mockConfiguration.Object);
     }
@@ -40,6 +43,8 @@ public class RefreshTokenCommandHandlerTests : BaseTestClass
         var userId = "test-user-id";
         var user = TestHelper.TestData.CreateTestUser(userId);
         var newRefreshToken = "new-refresh-token";
+        var userRoles = new List<string> { "User" };
+        var role = new IdentityRole("User");
 
         _mockRefreshTokenService.Setup(x => x.ValidateRefreshTokenAsync(command.RefreshToken))
             .ReturnsAsync(true);
@@ -49,6 +54,15 @@ public class RefreshTokenCommandHandlerTests : BaseTestClass
 
         _mockUserManager.Setup(x => x.FindByIdAsync(userId))
             .ReturnsAsync(user);
+
+        _mockUserManager.Setup(x => x.GetRolesAsync(user))
+            .ReturnsAsync(userRoles);
+
+        _mockRoleManager.Setup(x => x.FindByNameAsync("User"))
+            .ReturnsAsync(role);
+
+        _mockRoleManager.Setup(x => x.GetClaimsAsync(role))
+            .ReturnsAsync(new List<Claim>());
 
         _mockRefreshTokenService.Setup(x => x.RevokeRefreshTokenAsync(command.RefreshToken, userId, "Refreshed"))
             .Returns(Task.CompletedTask);
@@ -69,6 +83,8 @@ public class RefreshTokenCommandHandlerTests : BaseTestClass
         _mockRefreshTokenService.Verify(x => x.ValidateRefreshTokenAsync(command.RefreshToken), Times.Once);
         _mockRefreshTokenService.Verify(x => x.GetUserIdFromRefreshTokenAsync(command.RefreshToken), Times.Once);
         _mockUserManager.Verify(x => x.FindByIdAsync(userId), Times.Once);
+        _mockUserManager.Verify(x => x.GetRolesAsync(user), Times.Once);
+        _mockRoleManager.Verify(x => x.FindByNameAsync("User"), Times.Once);
         _mockRefreshTokenService.Verify(x => x.RevokeRefreshTokenAsync(command.RefreshToken, userId, "Refreshed"), Times.Once);
         _mockRefreshTokenService.Verify(x => x.GenerateRefreshTokenAsync(userId), Times.Once);
     }

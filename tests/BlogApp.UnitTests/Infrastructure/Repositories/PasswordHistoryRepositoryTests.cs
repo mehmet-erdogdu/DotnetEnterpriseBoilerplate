@@ -1,16 +1,9 @@
-using BlogApp.Domain.Entities;
-using BlogApp.Infrastructure.Data;
-using BlogApp.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Moq;
-
 namespace BlogApp.UnitTests.Infrastructure.Repositories;
 
 public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
 {
-    private readonly PasswordHistoryRepository _passwordHistoryRepository;
     private new readonly ApplicationDbContext _context;
+    private readonly PasswordHistoryRepository _passwordHistoryRepository;
 
     public PasswordHistoryRepositoryTests()
     {
@@ -39,7 +32,7 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
         // Assert
         result.Should().NotBeNull();
         result.Should().HaveCount(3);
-        
+
         var resultList = result.ToList();
         // Should be ordered by ChangedAt descending
         resultList[0].PasswordHash.Should().Be("hash2"); // Most recent
@@ -67,10 +60,10 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
         // Arrange
         var userId = "test-user-id";
         var passwordHash = "recent-hash";
-        
+
         // Set environment variable for test
         Environment.SetEnvironmentVariable("Security__PasswordHistoryCount", "3");
-        
+
         var passwordHistory = new List<PasswordHistory>
         {
             new() { Id = Guid.NewGuid(), UserId = userId, PasswordHash = "old-hash", ChangedAt = DateTime.UtcNow.AddDays(-1) },
@@ -95,10 +88,10 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
         var userId = "test-user-id";
         var passwordHash = "new-hash";
         var oldPasswordHash = "old-hash";
-        
+
         // Set environment variable for test
         Environment.SetEnvironmentVariable("Security__PasswordHistoryCount", "2");
-        
+
         var passwordHistory = new List<PasswordHistory>
         {
             new() { Id = Guid.NewGuid(), UserId = userId, PasswordHash = oldPasswordHash, ChangedAt = DateTime.UtcNow.AddDays(-1) },
@@ -121,7 +114,7 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
         // Arrange
         var userId = "test-user-id";
         var passwordHash = "new-hash";
-        
+
         // Set environment variable for test
         Environment.SetEnvironmentVariable("Security__PasswordHistoryCount", "5");
 
@@ -138,7 +131,7 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
         // Arrange
         var userId = "test-user-id";
         var otherUserId = "other-user-id";
-        
+
         var passwordHistory = new List<PasswordHistory>
         {
             new() { Id = Guid.NewGuid(), UserId = userId, PasswordHash = "hash1", ChangedAt = DateTime.UtcNow },
@@ -171,10 +164,7 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            _context?.Dispose();
-        }
+        if (disposing) _context?.Dispose();
         base.Dispose(disposing);
     }
 }

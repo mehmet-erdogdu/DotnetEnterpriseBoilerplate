@@ -1,21 +1,18 @@
-using BlogApp.Application.Services;
 using BlogApp.Worker.Services;
-using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace BlogApp.UnitTests.Worker.Services;
 
 public class RefreshTokenCleanupJobsTests
 {
-    private readonly RefreshTokenCleanupJobs _refreshTokenCleanupJobs;
-    private readonly Mock<IRefreshTokenService> _mockRefreshTokenService;
     private readonly Mock<ILogger<RefreshTokenCleanupJobs>> _mockLogger;
+    private readonly Mock<IRefreshTokenService> _mockRefreshTokenService;
+    private readonly RefreshTokenCleanupJobs _refreshTokenCleanupJobs;
 
     public RefreshTokenCleanupJobsTests()
     {
         _mockRefreshTokenService = new Mock<IRefreshTokenService>();
         _mockLogger = new Mock<ILogger<RefreshTokenCleanupJobs>>();
-        
+
         _refreshTokenCleanupJobs = new RefreshTokenCleanupJobs(
             _mockRefreshTokenService.Object,
             _mockLogger.Object);
@@ -53,7 +50,7 @@ public class RefreshTokenCleanupJobsTests
 
         // Act & Assert
         await Assert.ThrowsAsync<Exception>(() => _refreshTokenCleanupJobs.Run());
-        
+
         _mockRefreshTokenService.Verify(x => x.CleanupExpiredTokensAsync(), Times.Once);
     }
 }

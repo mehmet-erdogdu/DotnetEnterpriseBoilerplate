@@ -1,8 +1,3 @@
-using BlogApp.Domain.Entities;
-using BlogApp.Infrastructure.Interceptors;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 using TickerQ.EntityFrameworkCore.Configurations;
 
 namespace BlogApp.Infrastructure.Data;

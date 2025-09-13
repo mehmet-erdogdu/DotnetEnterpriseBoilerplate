@@ -5,11 +5,13 @@ public class LoginCommandHandlerTests : BaseApplicationTest
     private readonly LoginCommandHandler _handler;
     private readonly Mock<IConfiguration> _mockConfiguration;
     private readonly Mock<IRefreshTokenService> _mockRefreshTokenService;
+    private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
     private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
 
     public LoginCommandHandlerTests()
     {
         _mockUserManager = TestHelper.MockSetups.CreateMockUserManager();
+        _mockRoleManager = TestHelper.MockSetups.CreateMockRoleManager();
         _mockRefreshTokenService = new Mock<IRefreshTokenService>();
         _mockConfiguration = new Mock<IConfiguration>();
 
@@ -17,6 +19,7 @@ public class LoginCommandHandlerTests : BaseApplicationTest
 
         _handler = new LoginCommandHandler(
             _mockUserManager.Object,
+            _mockRoleManager.Object,
             _mockRefreshTokenService.Object,
             _mockMessageService.Object,
             _mockConfiguration.Object);
@@ -42,12 +45,23 @@ public class LoginCommandHandlerTests : BaseApplicationTest
 
         var user = TestHelper.TestData.CreateTestUser(email: command.Email);
         var refreshToken = "refresh_token_123";
+        var userRoles = new List<string> { "User" };
+        var role = new IdentityRole("User");
 
         _mockUserManager.Setup(x => x.FindByEmailAsync(command.Email))
             .ReturnsAsync(user);
 
         _mockUserManager.Setup(x => x.CheckPasswordAsync(user, command.Password))
             .ReturnsAsync(true);
+
+        _mockUserManager.Setup(x => x.GetRolesAsync(user))
+            .ReturnsAsync(userRoles);
+
+        _mockRoleManager.Setup(x => x.FindByNameAsync("User"))
+            .ReturnsAsync(role);
+
+        _mockRoleManager.Setup(x => x.GetClaimsAsync(role))
+            .ReturnsAsync(new List<Claim>());
 
         _mockRefreshTokenService.Setup(x => x.GenerateRefreshTokenAsync(user.Id))
             .ReturnsAsync(refreshToken);
@@ -67,6 +81,8 @@ public class LoginCommandHandlerTests : BaseApplicationTest
 
         _mockUserManager.Verify(x => x.FindByEmailAsync(command.Email), Times.Once);
         _mockUserManager.Verify(x => x.CheckPasswordAsync(user, command.Password), Times.Once);
+        _mockUserManager.Verify(x => x.GetRolesAsync(user), Times.Once);
+        _mockRoleManager.Verify(x => x.FindByNameAsync("User"), Times.Once);
         _mockRefreshTokenService.Verify(x => x.GenerateRefreshTokenAsync(user.Id), Times.Once);
     }
 

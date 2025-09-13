@@ -3,6 +3,7 @@ namespace BlogApp.Application.Auth.Commands;
 public class RefreshTokenCommandHandler(
     IRefreshTokenService refreshTokenService,
     UserManager<ApplicationUser> userManager,
+    RoleManager<IdentityRole> roleManager,
     IMessageService messageService,
     IConfiguration configuration) : IRequestHandler<RefreshTokenCommand, ApiResponse<LoginResponseDto>>
 {
@@ -49,24 +50,26 @@ public class RefreshTokenCommandHandler(
             new(ClaimTypes.NameIdentifier, user.Id),
             new(ClaimTypes.Name, user.UserName ?? string.Empty),
             new(ClaimTypes.Email, user.Email ?? string.Empty),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new("firstName", user.FirstName ?? string.Empty),
+            new("lastName", user.LastName ?? string.Empty)
         };
 
         // Add role claims
         var userRoles = await userManager.GetRolesAsync(user);
-        foreach (var role in userRoles)
-        {
-            authClaims.Add(new Claim(ClaimTypes.Role, role));
-        }
+        foreach (var role in userRoles) authClaims.Add(new Claim(ClaimTypes.Role, role));
 
         // Add role-specific claims
         foreach (var role in userRoles)
         {
-            var roleEntity = await userManager.FindByNameAsync(role);
+            // Use RoleManager to find the role by name
+            var roleEntity = await roleManager.FindByNameAsync(role);
             if (roleEntity != null)
             {
-                var roleClaims = await userManager.GetClaimsAsync(roleEntity);
-                authClaims.AddRange(roleClaims);
+                // Get claims for the role using RoleManager
+                var roleClaims = await roleManager.GetClaimsAsync(roleEntity);
+                // Add each role claim to the JWT token
+                foreach (var claim in roleClaims) authClaims.Add(claim);
             }
         }
 

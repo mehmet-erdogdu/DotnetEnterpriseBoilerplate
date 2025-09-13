@@ -282,12 +282,12 @@ static void ConfigureAuthentication(WebApplicationBuilder builder)
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]!))
             };
         });
-    
+
     // Add authorization with policies
     builder.Services.AddAuthorization(options =>
     {
-        options.AddPolicy("ViewUsers", policy => policy.RequireClaim("viewusers"));
-        options.AddPolicy("ViewRoles", policy => policy.RequireClaim("viewroles"));
+        options.AddPolicy("ViewUsers", policy => policy.RequireClaim("Permission"));
+        options.AddPolicy("ViewRoles", policy => policy.RequireClaim("Permission"));
     });
 }
 

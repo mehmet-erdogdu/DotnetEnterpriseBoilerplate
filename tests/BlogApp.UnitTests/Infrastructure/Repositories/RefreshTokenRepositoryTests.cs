@@ -1,16 +1,9 @@
-using BlogApp.Domain.Entities;
-using BlogApp.Infrastructure.Data;
-using BlogApp.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Moq;
-
 namespace BlogApp.UnitTests.Infrastructure.Repositories;
 
 public class RefreshTokenRepositoryTests : BaseInfrastructureTest
 {
-    private readonly RefreshTokenRepository _refreshTokenRepository;
     private new readonly ApplicationDbContext _context;
+    private readonly RefreshTokenRepository _refreshTokenRepository;
 
     public RefreshTokenRepositoryTests()
     {
@@ -24,7 +17,7 @@ public class RefreshTokenRepositoryTests : BaseInfrastructureTest
         // Arrange
         var userId = "test-user-id";
         var otherUserId = "other-user-id";
-        
+
         var refreshTokens = new List<RefreshToken>
         {
             new() { Id = Guid.NewGuid(), UserId = userId, Token = "token1", ExpiresAt = DateTime.UtcNow.AddDays(1) },
@@ -104,7 +97,7 @@ public class RefreshTokenRepositoryTests : BaseInfrastructureTest
         var otherUserId = "other-user-id";
         var revokedReason = "User logged out";
         var revokedBy = "system";
-        
+
         var refreshTokens = new List<RefreshToken>
         {
             new() { Id = Guid.NewGuid(), UserId = userId, Token = "token1", ExpiresAt = DateTime.UtcNow.AddDays(1), IsRevoked = false },
@@ -121,12 +114,12 @@ public class RefreshTokenRepositoryTests : BaseInfrastructureTest
         // Assert
         var userTokens = await _context.RefreshToken.Where(rt => rt.UserId == userId).ToListAsync();
         var otherUserTokens = await _context.RefreshToken.Where(rt => rt.UserId == otherUserId).ToListAsync();
-        
+
         userTokens.Should().HaveCount(2);
         userTokens.All(rt => rt.IsRevoked).Should().BeTrue();
         userTokens.All(rt => rt.RevokedReason == revokedReason).Should().BeTrue();
         userTokens.All(rt => rt.RevokedBy == revokedBy).Should().BeTrue();
-        
+
         // Other user's tokens should remain unchanged
         otherUserTokens.Should().HaveCount(1);
         otherUserTokens[0].IsRevoked.Should().BeFalse();
@@ -141,7 +134,7 @@ public class RefreshTokenRepositoryTests : BaseInfrastructureTest
         var revokedBy = "system";
 
         // Act
-        Func<Task> act = async () => await _refreshTokenRepository.RevokeAllUserTokensAsync(userId, revokedBy, revokedReason);
+        var act = async () => await _refreshTokenRepository.RevokeAllUserTokensAsync(userId, revokedBy, revokedReason);
 
         // Assert
         await act.Should().NotThrowAsync();
@@ -154,7 +147,7 @@ public class RefreshTokenRepositoryTests : BaseInfrastructureTest
         var tokenValue = "test-token";
         var revokedReason = "Token compromised";
         var revokedBy = "user";
-        
+
         var refreshToken = new RefreshToken
         {
             Id = Guid.NewGuid(),
@@ -188,7 +181,7 @@ public class RefreshTokenRepositoryTests : BaseInfrastructureTest
         var revokedBy = "user";
 
         // Act
-        Func<Task> act = async () => await _refreshTokenRepository.RevokeTokenAsync(tokenValue, revokedBy, revokedReason);
+        var act = async () => await _refreshTokenRepository.RevokeTokenAsync(tokenValue, revokedBy, revokedReason);
 
         // Assert
         await act.Should().NotThrowAsync();
@@ -199,12 +192,12 @@ public class RefreshTokenRepositoryTests : BaseInfrastructureTest
     {
         // Arrange
         var now = DateTime.UtcNow;
-        
+
         var refreshTokens = new List<RefreshToken>
         {
             new() { Id = Guid.NewGuid(), UserId = "user1", Token = "token1", ExpiresAt = now.AddDays(-31) }, // Expired more than 30 days ago
-            new() { Id = Guid.NewGuid(), UserId = "user2", Token = "token2", ExpiresAt = now.AddDays(1) },   // Valid
-            new() { Id = Guid.NewGuid(), UserId = "user3", Token = "token3", ExpiresAt = now.AddDays(-32) }  // Expired more than 30 days ago
+            new() { Id = Guid.NewGuid(), UserId = "user2", Token = "token2", ExpiresAt = now.AddDays(1) }, // Valid
+            new() { Id = Guid.NewGuid(), UserId = "user3", Token = "token3", ExpiresAt = now.AddDays(-32) } // Expired more than 30 days ago
         };
 
         _context.RefreshToken.AddRange(refreshTokens);
@@ -224,7 +217,7 @@ public class RefreshTokenRepositoryTests : BaseInfrastructureTest
     {
         // Arrange
         var now = DateTime.UtcNow;
-        
+
         var refreshTokens = new List<RefreshToken>
         {
             new() { Id = Guid.NewGuid(), UserId = "user1", Token = "token1", ExpiresAt = now.AddDays(1) },
@@ -244,10 +237,7 @@ public class RefreshTokenRepositoryTests : BaseInfrastructureTest
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            _context?.Dispose();
-        }
+        if (disposing) _context?.Dispose();
         base.Dispose(disposing);
     }
 }
