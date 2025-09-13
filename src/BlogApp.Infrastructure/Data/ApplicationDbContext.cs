@@ -17,8 +17,8 @@ public class ApplicationDbContext(
     public DbSet<Todo> Todos { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
     public DbSet<FileEntity> Files { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
-    public DbSet<PasswordHistory> PasswordHistories { get; set; }
+    public DbSet<RefreshToken> RefreshToken { get; set; }
+    public DbSet<PasswordHistory> PasswordHistory { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

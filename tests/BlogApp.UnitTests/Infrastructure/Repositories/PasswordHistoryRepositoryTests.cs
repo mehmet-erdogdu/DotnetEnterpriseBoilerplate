@@ -30,7 +30,7 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
             new() { Id = Guid.NewGuid(), UserId = userId, PasswordHash = "hash3", ChangedAt = DateTime.UtcNow.AddMinutes(-15) }
         };
 
-        _context.PasswordHistories.AddRange(passwordHistory);
+        _context.PasswordHistory.AddRange(passwordHistory);
         await _context.SaveChangesAsync();
 
         // Act
@@ -78,7 +78,7 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
             new() { Id = Guid.NewGuid(), UserId = userId, PasswordHash = "another-hash", ChangedAt = DateTime.UtcNow.AddMinutes(-10) }
         };
 
-        _context.PasswordHistories.AddRange(passwordHistory);
+        _context.PasswordHistory.AddRange(passwordHistory);
         await _context.SaveChangesAsync();
 
         // Act
@@ -105,7 +105,7 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
             new() { Id = Guid.NewGuid(), UserId = userId, PasswordHash = "another-old-hash", ChangedAt = DateTime.UtcNow.AddHours(-2) }
         };
 
-        _context.PasswordHistories.AddRange(passwordHistory);
+        _context.PasswordHistory.AddRange(passwordHistory);
         await _context.SaveChangesAsync();
 
         // Act
@@ -146,7 +146,7 @@ public class PasswordHistoryRepositoryTests : BaseInfrastructureTest
             new() { Id = Guid.NewGuid(), UserId = otherUserId, PasswordHash = "hash3", ChangedAt = DateTime.UtcNow }
         };
 
-        _context.PasswordHistories.AddRange(passwordHistory);
+        _context.PasswordHistory.AddRange(passwordHistory);
         await _context.SaveChangesAsync();
 
         // Act
