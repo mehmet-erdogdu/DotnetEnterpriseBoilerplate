@@ -1,5 +1,3 @@
-using BlogApp.Application.Constants;
-
 namespace BlogApp.API.Middleware;
 
 public class RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggingMiddleware> logger)

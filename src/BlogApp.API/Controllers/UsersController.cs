@@ -1,6 +1,3 @@
-using BlogApp.Application.Users.Commands;
-using BlogApp.Application.Users.Queries;
-
 namespace BlogApp.API.Controllers;
 
 [ApiController]

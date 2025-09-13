@@ -1,7 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using BlogApp.Application.Common.Behaviors;
-using Scalar.AspNetCore;
-
 [assembly: ExcludeFromCodeCoverage]
 
 var builder = WebApplication.CreateBuilder(args);

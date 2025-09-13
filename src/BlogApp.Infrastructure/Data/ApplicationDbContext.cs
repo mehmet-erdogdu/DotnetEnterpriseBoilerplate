@@ -1,5 +1,3 @@
-using TickerQ.EntityFrameworkCore.Configurations;
-
 namespace BlogApp.Infrastructure.Data;
 
 public class ApplicationDbContext(

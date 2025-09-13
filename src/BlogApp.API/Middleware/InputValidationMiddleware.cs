@@ -1,5 +1,3 @@
-using BlogApp.Application.Constants;
-
 namespace BlogApp.API.Middleware;
 
 public class InputValidationMiddleware(RequestDelegate next, ILogger<InputValidationMiddleware> logger)

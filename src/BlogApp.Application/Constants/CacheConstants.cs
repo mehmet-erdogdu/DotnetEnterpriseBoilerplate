@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace BlogApp.Application.Constants;
 
 [ExcludeFromCodeCoverage]
