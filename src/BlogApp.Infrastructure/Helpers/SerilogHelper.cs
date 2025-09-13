@@ -14,13 +14,13 @@ public static class SerilogHelper
         // Get the Serilog configuration section
         var serilogConfig = builder.Configuration.GetSection("Serilog");
         var minimumLevelConfig = serilogConfig.GetSection("MinimumLevel");
-        
+
         // Get the global log level from Serilog section, fallback to Information if not set
         var globalLogLevel = GetLogEventLevel(serilogConfig["GlobalLogLevel"] ?? "Information");
-        
+
         // Get the default log level, fallback to global log level if not set
         var defaultLevel = GetLogEventLevel(minimumLevelConfig["Default"] ?? serilogConfig["GlobalLogLevel"] ?? "Information");
-        
+
         var loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Is(defaultLevel)
             .Enrich.FromLogContext()

@@ -63,9 +63,11 @@ cd ai-blogApp
 docker-compose up -d
 ```
 
-### 3. Veritabanını Güncelleyin
+### 3. Veritabanını Güncelleyin ve Seed Data Ekleyin
 ```bash
 dotnet ef database update --project src/BlogApp.Infrastructure/BlogApp.Infrastructure.csproj
+
+dotnet run --project src/BlogApp.Seeder/BlogApp.Seeder.csproj
 ```
 
 ### 4. Uygulamayı Çalıştırın
@@ -92,6 +94,24 @@ Uygulama çalıştıktan sonra Swagger UI'a erişebilirsiniz:
 ```bash
 dotnet test
 ```
+
+## 🌱 Veri Doldurma (Seeding)
+
+Uygulama, geliştirme ortamında kullanılmak üzere örnek verilerle veritabanını doldurma özelliğine sahiptir. Bu özellik sayesinde uygulamayı çalıştırdığınızda otomatik olarak örnek kullanıcılar, blog yazıları ve yapılacaklar listesi oluşturulur.
+
+### Seed Edilen Veriler
+
+- **Kullanıcılar**: Admin ve normal kullanıcı hesapları
+- **Blog Yazıları**: Örnek blog yazıları
+- **Yapılacaklar**: Örnek yapılacaklar listesi
+
+### Seed İşlemini Manuel Olarak Çalıştırma
+
+```bash
+dotnet run --project src/BlogApp.Seeder/BlogApp.Seeder.csproj
+```
+
+Bu işlem, veritabanında henüz veri yoksa örnek verileri oluşturacaktır.
 
 ## 📊 Monitoring
 
