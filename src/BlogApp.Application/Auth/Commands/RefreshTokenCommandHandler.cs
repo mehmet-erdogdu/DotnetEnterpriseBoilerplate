@@ -23,7 +23,7 @@ public class RefreshTokenCommandHandler(
         await refreshTokenService.RevokeRefreshTokenAsync(request.RefreshToken, userId, "Refreshed");
 
         // Generate new tokens
-        var accessToken = GenerateJwtToken(user);
+        var accessToken = await GenerateJwtToken(user);
         var newRefreshToken = await refreshTokenService.GenerateRefreshTokenAsync(user.Id);
 
         var response = new LoginResponseDto
@@ -37,7 +37,7 @@ public class RefreshTokenCommandHandler(
         return ApiResponse<LoginResponseDto>.Success(response);
     }
 
-    private string GenerateJwtToken(ApplicationUser user)
+    private async Task<string> GenerateJwtToken(ApplicationUser user)
     {
         var jwtSecret = configuration["JWT:Secret"]!;
         var validIssuer = configuration["JWT:ValidIssuer"]!;
@@ -51,6 +51,24 @@ public class RefreshTokenCommandHandler(
             new(ClaimTypes.Email, user.Email ?? string.Empty),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+
+        // Add role claims
+        var userRoles = await userManager.GetRolesAsync(user);
+        foreach (var role in userRoles)
+        {
+            authClaims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
+        // Add role-specific claims
+        foreach (var role in userRoles)
+        {
+            var roleEntity = await userManager.FindByNameAsync(role);
+            if (roleEntity != null)
+            {
+                var roleClaims = await userManager.GetClaimsAsync(roleEntity);
+                authClaims.AddRange(roleClaims);
+            }
+        }
 
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
 

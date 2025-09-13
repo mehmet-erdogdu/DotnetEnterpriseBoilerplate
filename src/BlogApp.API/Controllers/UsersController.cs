@@ -5,7 +5,7 @@ namespace BlogApp.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[Authorize(Policy = "ViewUsers")]
 public class UsersController(
     IMediator mediator) : ControllerBase
 {
