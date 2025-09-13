@@ -26,16 +26,16 @@ public class RabbitMqDemoConsumerService(IRabbitMqConnectionProvider connectionP
                 logger.LogWarning("RabbitMQ received: {Message}", message);
                 // Simulate processing
                 await Task.Delay(10, stoppingToken);
-                await channel.BasicAckAsync(ea.DeliveryTag, false, cancellationToken: stoppingToken);
+                await channel.BasicAckAsync(ea.DeliveryTag, false, stoppingToken);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error processing RabbitMQ message");
-                await channel.BasicNackAsync(ea.DeliveryTag, false, true, cancellationToken: stoppingToken);
+                await channel.BasicNackAsync(ea.DeliveryTag, false, true, stoppingToken);
             }
         };
 
-        await channel.BasicConsumeAsync(queue.QueueName, false, consumer, cancellationToken: stoppingToken);
+        await channel.BasicConsumeAsync(queue.QueueName, false, consumer, stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested) await Task.Delay(1000, stoppingToken);
     }

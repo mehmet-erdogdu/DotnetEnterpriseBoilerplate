@@ -16,6 +16,6 @@ public class RabbitMqPublisher(IRabbitMqConnectionProvider connectionProvider) :
         await channel.ExchangeDeclareAsync(exchange, ExchangeType.Topic, true, cancellationToken: cancellationToken);
 
         var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
-        await channel.BasicPublishAsync(exchange, routingKey, body, cancellationToken: cancellationToken);
+        await channel.BasicPublishAsync(exchange, routingKey, body, cancellationToken);
     }
 }
