@@ -1,3 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
+
+[assembly: ExcludeFromCodeCoverage]
+
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine("Starting App " + DateTime.Now);
 
