@@ -1,9 +1,5 @@
-using System.Diagnostics.CodeAnalysis;
-using Hangfire;
-using Hangfire.Dashboard;
-using Hangfire.PostgreSql;
-
 [assembly: ExcludeFromCodeCoverage]
+
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine("Starting App " + DateTime.Now);
@@ -76,17 +72,4 @@ catch (Exception ex)
 finally
 {
     await Log.CloseAndFlushAsync();
-}
-
-
-// Simple authorization filter for Hangfire Dashboard
-public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
-{
-    public bool Authorize(DashboardContext context)
-    {
-        // In a production environment, you should implement proper authentication
-        // For now, we're allowing access to the dashboard
-        // You can add authentication logic here based on your requirements
-        return true;
-    }
 }

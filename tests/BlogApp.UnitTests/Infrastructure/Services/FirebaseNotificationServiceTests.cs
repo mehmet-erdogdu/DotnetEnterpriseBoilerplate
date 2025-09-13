@@ -21,7 +21,7 @@ public class FirebaseNotificationServiceTests : BaseInfrastructureTest
     public void Constructor_WithValidConfiguration_DoesNotThrow()
     {
         // Act
-        Action act = () =>
+        var act = () =>
         {
             var service = new FirebaseNotificationService(
                 _mockLogger.Object,

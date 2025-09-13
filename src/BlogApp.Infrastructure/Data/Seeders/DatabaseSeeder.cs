@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace BlogApp.Infrastructure.Data.Seeders;
 
-public class DatabaseSeeder
+public abstract class DatabaseSeeder
 {
     public static async Task SeedDatabaseAsync(IHost host)
     {
@@ -42,7 +42,8 @@ public class DatabaseSeeder
         catch (Exception ex)
         {
             logger.LogError(ex, "An error occurred while seeding the database");
-            throw new Exception("Database seeding failed. See inner exception for details.", ex);
+            // Use InvalidOperationException instead of generic Exception to address SonarQube issue S112
+            throw new InvalidOperationException("Database seeding failed. See inner exception for details.", ex);
         }
     }
 }

@@ -2,6 +2,8 @@ namespace BlogApp.Infrastructure.Data.Seeders;
 
 public class RoleClaimSeeder : ISeeder
 {
+    private const string PermissionClaimType = "Permission";
+
     public async Task SeedAsync(ApplicationDbContext context)
     {
         // Check if role claims already exist
@@ -23,19 +25,19 @@ public class RoleClaimSeeder : ISeeder
                 new IdentityRoleClaim<string>
                 {
                     RoleId = adminRole.Id,
-                    ClaimType = "Permission",
+                    ClaimType = PermissionClaimType,
                     ClaimValue = "ViewUsers"
                 },
                 new IdentityRoleClaim<string>
                 {
                     RoleId = adminRole.Id,
-                    ClaimType = "Permission",
+                    ClaimType = PermissionClaimType,
                     ClaimValue = "ViewFiles"
                 },
                 new IdentityRoleClaim<string>
                 {
                     RoleId = adminRole.Id,
-                    ClaimType = "Permission",
+                    ClaimType = PermissionClaimType,
                     ClaimValue = "ViewRoles"
                 }
             });
@@ -48,7 +50,7 @@ public class RoleClaimSeeder : ISeeder
                 new IdentityRoleClaim<string>
                 {
                     RoleId = userRole.Id,
-                    ClaimType = "Permission",
+                    ClaimType = PermissionClaimType,
                     ClaimValue = "ViewFiles"
                 }
             });
