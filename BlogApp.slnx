@@ -1,0 +1,18 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/BlogApp.API/BlogApp.API.csproj" />
+    <Project Path="src/BlogApp.Application/BlogApp.Application.csproj" />
+    <Project Path="src/BlogApp.Domain/BlogApp.Domain.csproj" />
+    <Project Path="src/BlogApp.Infrastructure/BlogApp.Infrastructure.csproj" />
+    <Project Path="src/BlogApp.Seeder/BlogApp.Seeder.csproj" />
+    <Project Path="src/BlogApp.Worker/BlogApp.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BlogApp.UnitTests/BlogApp.UnitTests.csproj" />
+  </Folder>
+</Solution>
