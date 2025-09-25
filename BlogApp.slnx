@@ -12,7 +12,7 @@
     <Project Path="src/BlogApp.Seeder/BlogApp.Seeder.csproj" />
     <Project Path="src/BlogApp.Worker/BlogApp.Worker.csproj" />
   </Folder>
-  <Folder Name="items">
+  <Folder Name="/items/">
     <File Path="Readme.md"/>
     <File Path="docker-compose.yml"/>
     <File Path=".gitignore"/>
