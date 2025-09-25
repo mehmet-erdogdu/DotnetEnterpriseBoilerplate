@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy solution and project files
-COPY ["BlogApp.sln", "./"]
+COPY ["BlogApp.slnx", "./"]
 COPY ["src/BlogApp.Domain/BlogApp.Domain.csproj", "src/BlogApp.Domain/"]
 COPY ["src/BlogApp.Application/BlogApp.Application.csproj", "src/BlogApp.Application/"]
 COPY ["src/BlogApp.Infrastructure/BlogApp.Infrastructure.csproj", "src/BlogApp.Infrastructure/"]
@@ -14,7 +14,7 @@ COPY ["src/BlogApp.Worker/BlogApp.Worker.csproj", "src/BlogApp.Worker/"]
 COPY ["tests/BlogApp.UnitTests/BlogApp.UnitTests.csproj", "tests/BlogApp.UnitTests/"]
 
 # Restore dependencies
-RUN dotnet restore "BlogApp.sln"
+RUN dotnet restore "BlogApp.slnx"
 
 # Copy source code (sensitive files excluded by .dockerignore)
 # Note: .dockerignore prevents copying of VAULT.json, .env files, and other secrets
@@ -26,7 +26,7 @@ RUN echo "Security check: Verifying no sensitive files in container..." && \
     echo "✓ No sensitive files found in container"
 
 # Build the application
-RUN dotnet build "BlogApp.sln" -c Release -o /app/build
+RUN dotnet build "BlogApp.slnx" -c Release -o /app/build
 
 # Publish the application
 RUN dotnet publish "src/BlogApp.API/BlogApp.API.csproj" -c Release -o /app/publish

@@ -12,6 +12,13 @@
     <Project Path="src/BlogApp.Seeder/BlogApp.Seeder.csproj" />
     <Project Path="src/BlogApp.Worker/BlogApp.Worker.csproj" />
   </Folder>
+  <Folder Name="items">
+    <File Path="Readme.md"/>
+    <File Path="docker-compose.yml"/>
+    <File Path=".gitignore"/>
+    <File Path="MakeFile"/>
+    <File Path="Dockerfile"/>
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/BlogApp.UnitTests/BlogApp.UnitTests.csproj" />
   </Folder>

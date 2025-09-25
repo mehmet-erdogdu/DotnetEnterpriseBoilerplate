@@ -17,16 +17,16 @@ Bu doküman, BlogApp projesini farklı ortamlarda nasıl deploy edeceğinizi aç
 # Multi-stage build for production
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY ["BlogApp.sln", "./"]
+COPY ["BlogApp.slnx", "./"]
 COPY ["src/BlogApp.Domain/BlogApp.Domain.csproj", "src/BlogApp.Domain/"]
 COPY ["src/BlogApp.Application/BlogApp.Application.csproj", "src/BlogApp.Application/"]
 COPY ["src/BlogApp.Infrastructure/BlogApp.Infrastructure.csproj", "src/BlogApp.Infrastructure/"]
 COPY ["src/BlogApp.API/BlogApp.API.csproj", "src/BlogApp.API/"]
 COPY ["src/BlogApp.Worker/BlogApp.Worker.csproj", "src/BlogApp.Worker/"]
 
-RUN dotnet restore "BlogApp.sln"
+RUN dotnet restore "BlogApp.slnx"
 COPY . .
-RUN dotnet build "BlogApp.sln" -c Release -o /app/build
+RUN dotnet build "BlogApp.slnx" -c Release -o /app/build
 RUN dotnet publish "src/BlogApp.API/BlogApp.API.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime

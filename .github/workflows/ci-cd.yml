@@ -150,7 +150,7 @@ jobs:
     - name: Run security scan
       run: |
         dotnet tool install --global security-scan
-        security-scan BlogApp.sln
+        security-scan BlogApp.slnx
 
   quality-gate:
     name: Quality Gate
