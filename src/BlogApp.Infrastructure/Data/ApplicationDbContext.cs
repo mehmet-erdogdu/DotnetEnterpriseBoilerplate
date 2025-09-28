@@ -24,6 +24,9 @@ public class ApplicationDbContext(
     {
         base.OnModelCreating(builder);
 
+        // Apply entity configurations
+        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
         // Global query filters for soft delete
         builder.Model.GetEntityTypes()
             .Where(entityType => typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
@@ -37,29 +40,5 @@ public class ApplicationDbContext(
                 var lambda = Expression.Lambda(compare, parameter);
                 builder.Entity(entityType).HasQueryFilter(lambda);
             });
-
-        builder.Entity<Post>()
-            .HasOne(p => p.Author)
-            .WithMany(u => u.Posts)
-            .HasForeignKey(p => p.AuthorId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Entity<Post>()
-            .HasOne(p => p.BannerImageFile)
-            .WithMany()
-            .HasForeignKey(p => p.BannerImageFileId)
-            .OnDelete(DeleteBehavior.SetNull);
-
-        builder.Entity<Todo>()
-            .HasOne(t => t.User)
-            .WithMany(u => u.Todos)
-            .HasForeignKey(t => t.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Entity<FileEntity>()
-            .HasOne(f => f.UploadedBy)
-            .WithMany()
-            .HasForeignKey(f => f.UploadedById)
-            .OnDelete(DeleteBehavior.SetNull);
     }
 }
