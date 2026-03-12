@@ -9,24 +9,24 @@ public class GetAllUsersQueryHandler(
         try
         {
             // Get users with pagination
-            var users = await userManager.Users.ToListAsync(cancellationToken);
+            var users = userManager.Users;
 
             // Apply search filter if provided
             if (!string.IsNullOrWhiteSpace(request.Search))
                 users = users.Where(u =>
                     u.Email!.Contains(request.Search) ||
                     u.FirstName.Contains(request.Search) ||
-                    u.LastName.Contains(request.Search)).ToList();
+                    u.LastName.Contains(request.Search));
 
             // Apply pagination
-            users = users
+            var data = await users
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .ToList();
+                .ToListAsync(cancellationToken);
 
             // Convert to DTOs
             var userDtos = new List<UserDto>();
-            foreach (var user in users)
+            foreach (var user in data)
             {
                 var roles = await userManager.GetRolesAsync(user);
                 userDtos.Add(new UserDto
