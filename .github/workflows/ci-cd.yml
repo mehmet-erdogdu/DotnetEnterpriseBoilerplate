@@ -68,6 +68,9 @@ jobs:
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.cs.opencover.reportsPaths="TestResults/*/coverage.opencover.xml" \
           /d:sonar.exclusions="**/Migrations/**" \
+          /d:sonar.issue.ignore.multicriteria="e1" \
+          /d:sonar.issue.ignore.multicriteria.e1.ruleKey="csharpsquid:S1192" \
+          /d:sonar.issue.ignore.multicriteria.e1.resourceKey="**/Migrations/**" \
           /d:sonar.coverage.exclusions="**/Tests/**,**/Migrations/**,**/DTOs/**,**/Entities/**,**/Program.cs,**/GlobalUsings.cs,**/Constants/**"
 
     - name: Run tests with coverage
