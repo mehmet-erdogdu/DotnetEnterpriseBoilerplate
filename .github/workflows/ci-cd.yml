@@ -67,7 +67,7 @@ jobs:
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.cs.opencover.reportsPaths="TestResults/*/coverage.opencover.xml" \
-          /d:sonar.exclusions="src/BlogApp.Infrastructure/Migrations/**" \
+          /d:sonar.exclusions="**/Migrations/**" \
           /d:sonar.coverage.exclusions="**/Tests/**,**/Migrations/**,**/DTOs/**,**/Entities/**,**/Program.cs,**/GlobalUsings.cs,**/Constants/**"
 
     - name: Run tests with coverage
