@@ -1,4 +1,4 @@
-# Multi-stage build for .NET 9 application
+# Multi-stage build for .NET 10 application
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Set working directory

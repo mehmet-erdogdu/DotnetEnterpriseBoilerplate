@@ -7,7 +7,7 @@ BlogApp projesine katkıda bulunmak istediğiniz için teşekkürler! Bu rehber,
 1. Projeyi fork edin
 2. Yerel makinenizde clone edin
 3. Gerekli araçları yükleyin:
-   - .NET 9 SDK
+   - .NET 10 SDK
    - Docker & Docker Compose
    - Git
 

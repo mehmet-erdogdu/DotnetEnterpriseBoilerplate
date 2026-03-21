@@ -15,7 +15,7 @@ Bu doküman, BlogApp projesini farklı ortamlarda nasıl deploy edeceğinizi aç
 ### Production Dockerfile
 ```dockerfile
 # Multi-stage build for production
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY ["BlogApp.slnx", "./"]
 COPY ["src/BlogApp.Domain/BlogApp.Domain.csproj", "src/BlogApp.Domain/"]
@@ -29,7 +29,7 @@ COPY . .
 RUN dotnet build "BlogApp.slnx" -c Release -o /app/build
 RUN dotnet publish "src/BlogApp.API/BlogApp.API.csproj" -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
 
@@ -219,7 +219,7 @@ stages:
     steps:
     - task: UseDotNet@2
       inputs:
-        version: '9.0.x'
+        version: '10.0.x'
         includePreviewVersions: false
 
     - task: DotNetCoreCLI@2
@@ -630,7 +630,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 10.0.x
     
     - name: Restore dependencies
       run: dotnet restore

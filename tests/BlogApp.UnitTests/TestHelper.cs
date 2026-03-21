@@ -284,7 +284,7 @@ public static class TestHelper
             var errors = new IdentityErrorDescriber();
             var logger = new Mock<ILogger<RoleManager<IdentityRole>>>();
 
-            // Create the RoleManager with the correct parameters that match .NET 9 constructor
+            // Create the RoleManager with the correct parameters that match .NET 10 constructor
             // Using the constructor that takes all required parameters
             var roleManager = new RoleManager<IdentityRole>(
                 store.Object,

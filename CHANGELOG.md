@@ -5,7 +5,7 @@ Bu dosya, BlogApp projesinde yapılan tüm önemli değişiklikleri belgeler.
 ## [Unreleased]
 
 ### Added
-- Modern .NET 9 desteği
+- Modern .NET 10 desteği
 - Clean Architecture yapısı
 - JWT Authentication sistemi
 - PostgreSQL veritabanı desteği
@@ -31,7 +31,7 @@ Bu dosya, BlogApp projesinde yapılan tüm önemli değişiklikleri belgeler.
 
 ### Changed
 - Proje yapısı Clean Architecture prensiplerine göre yeniden düzenlendi
-- Tüm uygulama .NET 9'a yükseltildi
+- Tüm uygulama .NET 10'a yükseltildi
 - Entity Framework Core 9 kullanılıyor
 - Serilog logging sistemi entegre edildi
 - Vault secret management sistemi eklendi

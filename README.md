@@ -1,10 +1,10 @@
-# BlogApp - Modern .NET 9 Blog Uygulaması
+# BlogApp - Modern .NET 10 Blog Uygulaması
 
-Bu proje, modern .NET 9 teknolojileri kullanılarak geliştirilmiş, güvenli ve ölçeklenebilir bir blog uygulamasıdır.
+Bu proje, modern .NET 10 teknolojileri kullanılarak geliştirilmiş, güvenli ve ölçeklenebilir bir blog uygulamasıdır.
 
 ## 🚀 Özellikler
 
-- **Modern .NET 9** - En güncel .NET teknolojileri
+- **Modern .NET 10** - En güncel .NET teknolojileri
 - **Clean Architecture** - Katmanlı mimari yapısı
 - **JWT Authentication** - Güvenli kimlik doğrulama
 - **PostgreSQL** - Güçlü veritabanı desteği
@@ -34,7 +34,7 @@ tests/
 
 ## 🛠️ Teknolojiler
 
-- **Backend**: .NET 9, ASP.NET Core
+- **Backend**: .NET 10, ASP.NET Core
 - **Database**: PostgreSQL, Entity Framework Core
 - **Cache**: Redis
 - **File Storage**: MinIO S3
@@ -45,7 +45,7 @@ tests/
 
 ## 📋 Gereksinimler
 
-- .NET 9 SDK
+- .NET 10 SDK
 - Docker & Docker Compose
 - PostgreSQL (opsiyonel - Docker ile gelir)
 - Redis (opsiyonel - Docker ile gelir)
