@@ -39,6 +39,7 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Cache SonarQube packages
+      if: matrix.os == 'ubuntu-latest'
       uses: actions/cache@v5
       with:
         path: ~/.sonar/cache

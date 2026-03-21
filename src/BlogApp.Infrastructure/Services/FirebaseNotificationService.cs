@@ -1,6 +1,7 @@
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
+using System.IO;
 
 namespace BlogApp.Infrastructure.Services;
 
@@ -29,7 +30,7 @@ public class FirebaseNotificationService : IFirebaseNotificationService
 
                 if (!string.IsNullOrEmpty(serviceAccountKeyPath))
                 {
-                    var credential = GoogleCredential.FromFile(serviceAccountKeyPath);
+                    var credential = GoogleCredential.FromServiceAccountCredential(ServiceAccountCredential.FromServiceAccountData(File.OpenRead(serviceAccountKeyPath)));
                     FirebaseApp.Create(new AppOptions
                     {
                         Credential = credential,
