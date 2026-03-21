@@ -44,6 +44,22 @@ jobs:
     - name: Build solution
       run: dotnet build --configuration Release --no-restore
 
+    - name: Run SonarQube analysis
+      if: matrix.os == 'ubuntu-latest'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_ORG: ${{ secrets.SONAR_ORG }}
+      run: |
+        # TODO: Configure SONAR_ORG secret with your SonarCloud organization key
+        dotnet sonarscanner begin \
+          /k:"BlogApp" \
+          /o:"${{ env.SONAR_ORG }}" \
+          /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+          /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.cs.opencover.reportsPaths="TestResults/*/coverage.opencover.xml" \
+          /d:sonar.coverage.exclusions="**/Tests/**,**/Migrations/**,**/DTOs/**,**/Entities/**,**/Program.cs,**/GlobalUsings.cs,**/Constants/**"
+
     - name: Run tests with coverage
       run: |
         dotnet test \
@@ -52,6 +68,12 @@ jobs:
           --no-restore \
           --collect:"XPlat Code Coverage" \
           --settings tests/BlogApp.UnitTests/coverlet.runsettings
+
+    - name: End SonarQube analysis
+      if: matrix.os == 'ubuntu-latest'
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
     - name: Extract coverage percentage
       id: coverage
@@ -64,29 +86,12 @@ jobs:
 
     - name: Upload coverage reports to Codecov
       if: matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v4
+      uses: actions/codecov/codecov-action@v4
       with:
         file: ./TestResults/*/coverage.cobertura.xml
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
-
-    - name: Upload coverage to SonarCloud
-      if: matrix.os == 'ubuntu-latest'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        dotnet tool install --global dotnet-sonarscanner --version 5.14.0
-        dotnet sonarscanner begin \
-          /k:"BlogApp" \
-          /o:"your-org" \
-          /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-          /d:sonar.host.url="https://sonarcloud.io" \
-          /d:sonar.cs.opencover.reportsPaths="CoverageReports/HTML/Cobertura.xml" \
-          /d:sonar.coverage.exclusions="**/Tests/**,**/Migrations/**,**/DTOs/**,**/Entities/**,**/Program.cs,**/GlobalUsings.cs,**/Constants/**"
-        dotnet build --configuration Release --no-restore
-        dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
     - name: Archive coverage reports
       uses: actions/upload-artifact@v4
