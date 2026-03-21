@@ -48,7 +48,6 @@ global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.IdentityModel.Tokens;
-global using Microsoft.OpenApi.Models;
 global using Scalar.AspNetCore;
 global using Serilog;
 global using Serilog.Context;
