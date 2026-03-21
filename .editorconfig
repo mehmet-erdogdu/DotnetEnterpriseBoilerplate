@@ -1,0 +1,10 @@
+root = true
+
+[*.cs]
+# Global rules
+# S1192 by default uyarı olabilir (veya isterseniz none yapabilirsiniz)
+# dotnet_diagnostic.S1192.severity = warning
+
+[src/BlogApp.Infrastructure/Migrations/**/*.cs]
+# Sadece Migrations içindeki S1192 uyarılarını sustur
+dotnet_diagnostic.S1192.severity = none
